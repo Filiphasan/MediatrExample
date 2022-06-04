@@ -10,4 +10,9 @@
     <ProjectReference Include="..\MediatrExample.Shared\MediatrExample.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\Data\" />
+    <Folder Include="Interfaces\Service\" />
+  </ItemGroup>
+
 </Project>

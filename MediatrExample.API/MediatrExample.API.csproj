@@ -14,4 +14,8 @@
     <ProjectReference Include="..\MediatrExample.CQRS\MediatrExample.CQRS.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="CustomExtensions\" />
+  </ItemGroup>
+
 </Project>

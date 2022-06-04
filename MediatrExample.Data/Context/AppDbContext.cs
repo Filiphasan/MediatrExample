@@ -1,5 +1,6 @@
 ﻿using MediatrExample.Core.Entities;
 using MediatrExample.Data.Configuration;
+using MediatrExample.Data.Seeds;
 using Microsoft.EntityFrameworkCore;
 
 namespace MediatrExample.Data.Context
@@ -19,6 +20,7 @@ namespace MediatrExample.Data.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new UserSeed());
             base.OnModelCreating(builder); 
         }
     }

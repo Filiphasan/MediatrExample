@@ -12,6 +12,8 @@ builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
 {
     opt.UseNpgsql(Configuration.GetConnectionString("NpgSQLConnection"), npsqlOpt => npsqlOpt.CommandTimeout(150));
 });
+// Above Code for "timestamp with time zone' literal cannot be generated for Local DateTime: a UTC DateTime is required" error solution
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>

@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MediatrExample.Shared\MediatrExample.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

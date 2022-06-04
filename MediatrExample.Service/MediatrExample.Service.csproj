@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MediatrExample.Data\MediatrExample.Data.csproj" />
+  </ItemGroup>
+
 </Project>

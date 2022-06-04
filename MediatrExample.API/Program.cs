@@ -1,10 +1,17 @@
-
+using MediatrExample.Data.Context;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+var Configuration = builder.Configuration;
 
 // Add services to the container.
 builder.Services.AddControllers();
+
+builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
+{
+    opt.UseNpgsql(Configuration.GetConnectionString("NpgSQLConnection"), npsqlOpt => npsqlOpt.CommandTimeout(150));
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>

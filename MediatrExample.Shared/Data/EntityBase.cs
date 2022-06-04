@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MediatrExample.Shared.Data
 {
@@ -13,7 +9,9 @@ namespace MediatrExample.Shared.Data
             CreatedTime = DateTime.Now;
         }
 
+        [Column("UPDATED_TIME")]
         public Nullable<DateTime> UpdatedTime { get; set; }
+        [Column("CREATED_TIME")]
         public Nullable<DateTime> CreatedTime { get; set; }
     }
 }

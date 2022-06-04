@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatrExample.Shared.CustomMethod;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MediatrExample.API.Controller
 {
@@ -15,7 +16,9 @@ namespace MediatrExample.API.Controller
         [ProducesResponseType(typeof(string), 200)]
         public async Task<IActionResult> GetFirst()
         {
-            return Ok("Server Working..");
+            var date = DateTime.Now;
+
+            return Ok(date.GetDateTimeToMyString());
         }
     }
 }

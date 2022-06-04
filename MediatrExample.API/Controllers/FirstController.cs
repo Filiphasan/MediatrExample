@@ -12,6 +12,7 @@ namespace MediatrExample.API.Controller
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(string), 200)]
         public async Task<IActionResult> GetFirst()
         {
             return Ok("Server Working..");

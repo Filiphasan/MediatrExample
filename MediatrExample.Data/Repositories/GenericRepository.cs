@@ -51,20 +51,20 @@ namespace MediatrExample.Data.Repositories
             return entities;
         }
 
-        public TEntity GetById(object id)
+        public TEntity GetById(object id, bool hasTrack = false)
         {
             var entity = _dbSet.Find(id);
-            if (entity != null)
+            if (entity != null && !hasTrack)
             {
                 _context.Entry(entity).State = EntityState.Detached;
             }
             return entity;
         }
 
-        public async Task<TEntity> GetByIdAsync(object id)
+        public async Task<TEntity> GetByIdAsync(object id, bool hasTrack = false)
         {
             var entity = await _dbSet.FindAsync(id);
-            if (entity != null)
+            if (entity != null && !hasTrack)
             {
                 _context.Entry(entity).State = EntityState.Detached;
             }

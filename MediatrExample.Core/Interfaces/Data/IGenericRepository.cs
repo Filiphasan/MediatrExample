@@ -10,8 +10,8 @@ namespace MediatrExample.Core.Interfaces.Data
 {
     public interface IGenericRepository<TEntity> where TEntity : class, IEntity, new()
     {
-        Task<TEntity> GetByIdAsync(object id);
-        TEntity GetById(object id);
+        Task<TEntity> GetByIdAsync(object id, bool hasTrack = false);
+        TEntity GetById(object id, bool hasTrack = false);
         Task<IEnumerable<TEntity>> GetAllAsync();
         IEnumerable<TEntity> GetAll();
         IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate);

@@ -23,5 +23,7 @@ namespace MediatrExample.Core.Interfaces.Data
         void Delete(TEntity entity);
         void Delete(object id);
         TEntity Update(TEntity entity);
+        void SaveChanges();
+        Task SaveChangesAsync();
     }
 }

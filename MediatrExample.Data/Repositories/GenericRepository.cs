@@ -111,6 +111,16 @@ namespace MediatrExample.Data.Repositories
             return query;
         }
 
+        public void SaveChanges()
+        {
+            _context.SaveChanges();
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
+        }
+
         public TEntity Update(TEntity entity)
         {
             var data = _dbSet.Update(entity);

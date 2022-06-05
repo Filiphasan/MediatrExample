@@ -1,3 +1,7 @@
+using FluentValidation;
+using MediatR;
+using MediatrExample.API.CustomExtensions;
+using MediatrExample.API.Middleware;
 using MediatrExample.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -15,6 +19,10 @@ builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
 // Above Code for "timestamp with time zone' literal cannot be generated for Local DateTime: a UTC DateTime is required" error solution
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+builder.Services.AddMyServiceLifeCycles();
+builder.Services.AddMediatR(typeof(Program).Assembly);
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -22,7 +30,7 @@ builder.Services.AddSwaggerGen(opt =>
     {
         Version = "v1",
         Title = "Mediatr Example",
-        Description = "CQRS with Mediatr, FluentValidation, EF Core",
+        Description = "CQRS with Mediatr, FluentValidation, EF Core, ELK + SeriLog",
         TermsOfService = new Uri("https://example.com/terms"),
         Contact = new OpenApiContact
         {
@@ -46,9 +54,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(opt =>
     {
-        opt.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+        opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Mediatr Example v1");
     });
 }
+
+app.UseMiddleware<CustomExceptionHandler>();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();

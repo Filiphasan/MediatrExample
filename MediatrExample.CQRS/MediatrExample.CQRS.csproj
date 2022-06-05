@@ -7,7 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="11.0.2" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MediatrExample.Service\MediatrExample.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Behavior\" />
   </ItemGroup>
 
 </Project>

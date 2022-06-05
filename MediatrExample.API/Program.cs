@@ -2,9 +2,13 @@ using FluentValidation;
 using MediatR;
 using MediatrExample.API.CustomExtensions;
 using MediatrExample.API.Middleware;
+using MediatrExample.CQRS;
+using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.Data.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
@@ -12,16 +16,17 @@ var Configuration = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllers();
 
+builder.Services.AddMediatR(Assembly.GetAssembly(typeof(GetAllUserRequest)));
+builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddMyServiceLifeCycles();
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
 {
     opt.UseNpgsql(Configuration.GetConnectionString("NpgSQLConnection"), npsqlOpt => npsqlOpt.CommandTimeout(150));
 });
 // Above Code for "timestamp with time zone' literal cannot be generated for Local DateTime: a UTC DateTime is required" error solution
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-
-builder.Services.AddMyServiceLifeCycles();
-builder.Services.AddMediatR(typeof(Program).Assembly);
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
@@ -61,7 +66,6 @@ if (app.Environment.IsDevelopment())
 app.UseMiddleware<CustomExceptionHandler>();
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
 
 app.UseRouting();
 

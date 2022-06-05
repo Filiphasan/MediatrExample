@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using MediatrExample.Shared.RequestResponse;
+using MediatrExample.Shared.DataModels;
 
 namespace MediatrExample.CQRS
 {

@@ -1,13 +1,10 @@
 ﻿using MediatR;
 using MediatrExample.CQRS.User.GetAllUser;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediatrExample.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : CustomBaseController
     {
         private readonly IMediator _mediator;
 
@@ -16,9 +13,10 @@ namespace MediatrExample.API.Controllers
             _mediator = mediator;
         }
 
-        public async Task<IActionResult> GetUserList(GetAllUserRequest request)
+        [HttpPost("list")]
+        public async Task<IActionResult> GetUserList([FromBody]GetAllUserRequest request)
         {
-            return Ok();
+            return CreateResultInstance(await _mediator.Send(request));
         }
     }
 }

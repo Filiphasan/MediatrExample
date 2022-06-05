@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace MediatrExample.Shared.RequestResponse
+namespace MediatrExample.Shared.DataModels
 {
     public class GenericResponse<TResponse>
     {

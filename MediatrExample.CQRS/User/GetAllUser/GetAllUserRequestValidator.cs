@@ -6,7 +6,6 @@ namespace MediatrExample.CQRS.User.GetAllUser
     {
         public GetAllUserRequestValidator()
         {
-
         }
     }
 }

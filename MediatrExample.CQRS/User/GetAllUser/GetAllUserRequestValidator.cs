@@ -6,6 +6,8 @@ namespace MediatrExample.CQRS.User.GetAllUser
     {
         public GetAllUserRequestValidator()
         {
+            RuleFor(x => x.PageNumber).NotNull().GreaterThanOrEqualTo(0);
+            RuleFor(x => x.PageCount).NotNull().GreaterThan(0);
         }
     }
 }

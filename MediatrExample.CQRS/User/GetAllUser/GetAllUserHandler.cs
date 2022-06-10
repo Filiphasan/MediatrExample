@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using MediatrExample.Core.Interfaces.Data;
-using MediatrExample.Shared.CustomExceptions;
 using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
 using MediatrExample.Shared.DataModels.User.GetAllUser;

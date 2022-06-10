@@ -7,10 +7,10 @@ namespace MediatrExample.Shared.DataModels
         [JsonPropertyName("statusCode")]
         public int HttpCode { get; set; }
         public bool Status { get; set; }
-        public string Message { get; set; }
+        public string Message { get; set; } = String.Empty;
         [JsonPropertyName("data")]
         public TResponse? Response { get; set; }
-        public IReadOnlyDictionary<string, string[]> ValidationErrors { get; set; }
+        public IReadOnlyDictionary<string, string[]>? ValidationErrors { get; set; }
 
         public static GenericResponse<TResponse> Success(int httpCode, TResponse data)
         {

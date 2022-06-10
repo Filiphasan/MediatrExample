@@ -1,11 +1,10 @@
 ﻿using MediatrExample.Shared.DataModels.User.GetAllUser;
-using MediatrExample.Shared.RequestResponse;
+using MediatrExample.Shared.RequestResponse.Pagination;
 
 namespace MediatrExample.CQRS.User.GetAllUser
 {
-    public class GetAllUserResponse
+    public class GetAllUserResponse : PaginationResponse
     {
-        public int TotalCount { get; set; }
         public IEnumerable<UserDataModel>? UserList { get; set; }
     }
 }

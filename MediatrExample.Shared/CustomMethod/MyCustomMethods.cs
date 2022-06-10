@@ -65,5 +65,18 @@
             }
             return result;
         }
+
+        /// <summary>
+        /// Pagination EF Core Custom, If u dont use this method, best way is ChunkSize for EF Core 6
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="query"></param>
+        /// <param name="pageCount"></param>
+        /// <param name="pageNumber"></param>
+        /// <returns></returns>
+        public static IQueryable<T> TryPagination<T>(this IQueryable<T> query, int pageCount, int pageNumber)
+        {
+            return query.Skip(pageCount * pageNumber).Take(pageCount);
+        }
     }
 }

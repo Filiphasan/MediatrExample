@@ -4,5 +4,6 @@ namespace MediatrExample.Core.Interfaces.Data
 {
     public interface IUserRepository : IGenericRepository<User>
     {
+        IQueryable<User> GetUserList(string searchQuery);
     }
 }

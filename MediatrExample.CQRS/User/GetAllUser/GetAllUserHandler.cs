@@ -5,6 +5,7 @@ using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
 using MediatrExample.Shared.DataModels.User.GetAllUser;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace MediatrExample.CQRS.User.GetAllUser
@@ -23,16 +24,16 @@ namespace MediatrExample.CQRS.User.GetAllUser
             try
             {
                 var response = new GetAllUserResponse();
-                var userList = await _userRepository.GetAllAsync();
-                var data = userList.Select(x => new UserDataModel
+                var query = _userRepository.GetUserList(request.Query);
+                var data = await query.Select(x => new UserDataModel
                 {
                     FirstName = x.FirstName,
                     LastName = x.LastName,
                     Gsm = x.Gsm,
                     Id = x.Id,
                     Mail = x.Mail,
-                });
-                response.TotalCount = userList.Count();
+                }).TryPagination(request.PageCount, request.PageNumber).ToListAsync();
+                response.TotalCount = await query.CountAsync();
                 response.UserList = data;
                 return GenericResponse<GetAllUserResponse>.Success(200, response);
             }

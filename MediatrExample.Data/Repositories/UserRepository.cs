@@ -9,5 +9,17 @@ namespace MediatrExample.Data.Repositories
         public UserRepository(AppDbContext context) : base(context)
         {
         }
+
+        public IQueryable<User> GetUserList(string searchQuery)
+        {
+            var query = (from user in _context.Users
+                         select user).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                query = query.Where(x => x.Mail.Contains(searchQuery));
+            }
+            return query;
+        }
     }
 }

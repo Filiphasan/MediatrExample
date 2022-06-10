@@ -24,6 +24,7 @@ namespace MediatrExample.CQRS.User.GetAllUser
             {
                 var response = new GetAllUserResponse();
                 var query = _userRepository.GetUserList(request.Query);
+
                 var data = await query.Select(x => new UserDataModel
                 {
                     FirstName = x.FirstName,
@@ -32,8 +33,10 @@ namespace MediatrExample.CQRS.User.GetAllUser
                     Id = x.Id,
                     Mail = x.Mail,
                 }).TryPagination(request.PageCount, request.PageNumber).ToListAsync();
+
                 response.TotalCount = await query.CountAsync();
                 response.UserList = data;
+
                 return GenericResponse<GetAllUserResponse>.Success(200, response);
             }
             catch (Exception ex)

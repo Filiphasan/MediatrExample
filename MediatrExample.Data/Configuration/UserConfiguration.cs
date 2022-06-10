@@ -14,6 +14,7 @@ namespace MediatrExample.Data.Configuration
             builder.Property(x => x.LastName).HasColumnName("LAST_NAME").IsRequired().HasMaxLength(50);
             builder.Property(x => x.Mail).HasColumnName("MAIL").HasMaxLength(150);
             builder.Property(x => x.Gsm).HasColumnName("GSM").HasMaxLength(20);
+            builder.Property(x => x.PasswordHash).HasColumnName("PW_HASH").HasMaxLength(250).IsRequired();
             builder.ToTable("USERS");
         }
     }

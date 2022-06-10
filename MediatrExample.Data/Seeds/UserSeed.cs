@@ -16,7 +16,8 @@ namespace MediatrExample.Data.Seeds
                 Gsm = "5555555555",
                 Mail = "test@test.com",
                 CreatedTime = DateTime.Now,
-                UpdatedTime = DateTime.Now
+                UpdatedTime = DateTime.Now,
+                PasswordHash = "E10ADC3949BA59ABBE56E057F20F883E"
             });
         }
     }

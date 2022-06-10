@@ -3,6 +3,7 @@ using System;
 using MediatrExample.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MediatrExample.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220610154215_pw alani")]
+    partial class pwalani
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,13 +79,13 @@ namespace MediatrExample.Data.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedTime = new DateTime(2022, 6, 10, 18, 45, 31, 690, DateTimeKind.Local).AddTicks(3781),
+                            CreatedTime = new DateTime(2022, 6, 10, 18, 42, 15, 172, DateTimeKind.Local).AddTicks(478),
                             FirstName = "Hasan",
                             Gsm = "5555555555",
                             LastName = "Erdal",
                             Mail = "test@test.com",
-                            PasswordHash = "E10ADC3949BA59ABBE56E057F20F883E",
-                            UpdatedTime = new DateTime(2022, 6, 10, 18, 45, 31, 690, DateTimeKind.Local).AddTicks(3783)
+                            PasswordHash = "",
+                            UpdatedTime = new DateTime(2022, 6, 10, 18, 42, 15, 172, DateTimeKind.Local).AddTicks(480)
                         });
                 });
 #pragma warning restore 612, 618

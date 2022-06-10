@@ -1,17 +1,20 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace MediatrExample.CQRS
 {
-    public class BaseHandler<TRequest, TResponse>
+    public class BaseHandler<TRequest, TResponse, THandler>
     {
         protected readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEnumerable<IValidator<TRequest>> _validators;
+        protected readonly ILogger<THandler> _logger;
 
-        public BaseHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<IValidator<TRequest>> validators)
+        public BaseHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<IValidator<TRequest>> validators, ILogger<THandler> logger)
         {
             _httpContextAccessor = httpContextAccessor;
             _validators = validators;
+            _logger = logger;
         }
 
         public async Task<Dictionary<string, string[]>> CheckValidate(TRequest request)

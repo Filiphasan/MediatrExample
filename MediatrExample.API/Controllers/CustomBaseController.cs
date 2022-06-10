@@ -5,8 +5,15 @@ namespace MediatrExample.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CustomBaseController : ControllerBase
+    public class CustomBaseController<TController> : ControllerBase
     {
+        protected readonly ILogger<TController> _logger;
+
+        public CustomBaseController(ILogger<TController> logger)
+        {
+            _logger = logger;
+        }
+
         [NonAction]
         public IActionResult CreateResultInstance<T>(GenericResponse<T> response)
         {

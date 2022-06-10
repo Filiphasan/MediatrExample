@@ -2,7 +2,6 @@ using FluentValidation;
 using MediatR;
 using MediatrExample.API.CustomExtensions;
 using MediatrExample.API.Middleware;
-using MediatrExample.CQRS;
 using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.Data.Context;
 using Microsoft.EntityFrameworkCore;

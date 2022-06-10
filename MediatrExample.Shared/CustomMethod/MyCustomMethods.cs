@@ -46,5 +46,24 @@
             }
             return result;
         }
+
+        /// <summary>
+        /// Exception to String For Logging.
+        /// </summary>
+        /// <param name="exception"></param>
+        /// <returns></returns>
+        public static string ExpectExceptionMessage(this Exception exception)
+        {
+            string result = string.Empty;
+            if (exception.InnerException != null)
+            {
+                result = exception.Message + exception.InnerException.ToString();
+            }
+            else
+            {
+                result = exception.Message;
+            }
+            return result;
+        }
     }
 }

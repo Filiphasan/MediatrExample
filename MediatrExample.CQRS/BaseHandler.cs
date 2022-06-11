@@ -17,7 +17,7 @@ namespace MediatrExample.CQRS
             _logger = logger;
         }
 
-        public async Task<Dictionary<string, string[]>> CheckValidate(TRequest request)
+        public async Task CheckValidate(TRequest request)
         {
             var errorsDictionary = new Dictionary<string, string[]>();
             if (_validators.Any())
@@ -38,7 +38,10 @@ namespace MediatrExample.CQRS
                         })
                     .ToDictionary(x => x.Key, x => x.Values);                
             }
-            return errorsDictionary;
+            if (errorsDictionary.Any())
+            {
+                throw new Shared.CustomExceptions.ValidationException(errorsDictionary);
+            }
         }
     }
 }

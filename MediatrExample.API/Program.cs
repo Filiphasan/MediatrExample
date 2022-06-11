@@ -1,7 +1,6 @@
 using FluentValidation;
 using MediatR;
 using MediatrExample.API.CustomExtensions;
-using MediatrExample.API.Middleware;
 using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.Data.Context;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +17,7 @@ builder.Services.AddControllers();
 builder.Services.AddMediatR(Assembly.GetAssembly(typeof(GetAllUserRequest)));
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddMyServiceLifeCycles();
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(GetAllUserRequestValidator)));
 
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
 {

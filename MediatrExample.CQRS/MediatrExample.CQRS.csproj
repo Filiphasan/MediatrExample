@@ -17,8 +17,4 @@
     <ProjectReference Include="..\MediatrExample.Service\MediatrExample.Service.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Behavior\" />
-  </ItemGroup>
-
 </Project>

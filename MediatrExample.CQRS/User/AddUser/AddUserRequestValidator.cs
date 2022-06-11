@@ -14,7 +14,7 @@ namespace MediatrExample.CQRS.User.AddUser
              {
                  string result = x.FormatGSMForTR();
                  x = result;
-                 return result == string.Empty;
+                 return result != string.Empty;
              }).WithMessage("GSM Number has Wrong Format! Correct Format One Of '+905555555555,905555555555,05555555555,5555555555'");
             RuleFor(x => x.Password).NotNull().NotEmpty().Matches(@"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,16}$")
                 .WithMessage("Password must contain one uppercase, one lowercase, one number. Password length must beetween 6 and 16.");

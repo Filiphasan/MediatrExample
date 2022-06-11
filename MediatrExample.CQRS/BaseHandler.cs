@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using ValidationException = MediatrExample.Shared.CustomExceptions.ValidationException;
 
 namespace MediatrExample.CQRS
 {
@@ -40,7 +41,7 @@ namespace MediatrExample.CQRS
             }
             if (errorsDictionary.Any())
             {
-                throw new Shared.CustomExceptions.ValidationException(errorsDictionary);
+                throw new ValidationException(errorsDictionary);
             }
         }
     }

@@ -28,10 +28,5 @@
         /// <param name="value"></param>
         /// <returns></returns>
         Task<bool> CheckSHA256HashAsync(string hashValue, string value);
-        /// <summary>
-        /// Dispose Memory and Use GC
-        /// </summary>
-        /// <returns></returns>
-        void Dispose();
     }
 }

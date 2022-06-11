@@ -1,6 +1,5 @@
 ﻿using MediatrExample.Shared.CustomExceptions;
 using MediatrExample.Shared.DataModels;
-using MediatrExample.Shared.RequestResponse;
 using System.Text.Json;
 
 namespace MediatrExample.API.Middleware

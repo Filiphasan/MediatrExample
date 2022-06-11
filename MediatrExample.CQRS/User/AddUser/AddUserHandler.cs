@@ -25,7 +25,7 @@ namespace MediatrExample.CQRS.User.AddUser
             {
                 var response = new AddUserResponse();
                 string pwHash = await _hashService.SetSHA256HashAsync(request.Password);
-                _hashService.Dispose();
+                await _hashService.DisposeAsync();
 
                 var userEntity = new Core.Entities.User()
                 {

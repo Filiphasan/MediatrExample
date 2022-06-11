@@ -89,7 +89,14 @@
             string result = string.Empty;
             string formatGsm = string.Empty;
 
-            if (gsm == null || gsm.Length < 10 || gsm.Length > 13)
+            if (gsm is null)
+            {
+                return result;
+            }
+
+            gsm = gsm.Replace("-", string.Empty).Replace(" ", string.Empty);
+
+            if (gsm.Length < 10 || gsm.Length > 13)
             {
                 return result;
             }

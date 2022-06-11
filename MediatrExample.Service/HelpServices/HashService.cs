@@ -28,7 +28,7 @@ namespace MediatrExample.Service.HelpServices
 
             Byte[] hashBytes = await md5Service.ComputeHashAsync(stream);
 
-            return BitConverter.ToString(hashBytes);
+            return BitConverter.ToString(hashBytes).Replace("-", string.Empty);
         }
 
         public async Task<string> SetSHA256HashAsync(string value)
@@ -41,15 +41,16 @@ namespace MediatrExample.Service.HelpServices
 
             Byte[] hashBytes = await sha256Service.ComputeHashAsync(stream);
 
-            return BitConverter.ToString(hashBytes);
+            return BitConverter.ToString(hashBytes).Replace("-", string.Empty);
         }
 
-        public void Dispose()
+        public ValueTask DisposeAsync()
         {
             GC.Collect();
             GC.SuppressFinalize(this);
             GC.WaitForPendingFinalizers();
             GC.Collect();
+            return ValueTask.CompletedTask;
         }
     }
 }

@@ -62,7 +62,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseMiddleware<CustomExceptionHandler>();
+app.UseMyCustomMiddleware();
 
 app.UseHttpsRedirection();
 

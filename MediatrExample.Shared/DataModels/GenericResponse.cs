@@ -12,6 +12,11 @@ namespace MediatrExample.Shared.DataModels
         public TResponse? Response { get; set; }
         public IReadOnlyDictionary<string, string[]>? ValidationErrors { get; set; }
 
+        public static GenericResponse<TResponse> Success(TResponse data)
+        {
+            return new GenericResponse<TResponse> { Status = true, Response = data, Message = "İşlem Başarılı", HttpCode = 200 };
+        }
+
         public static GenericResponse<TResponse> Success(int httpCode, TResponse data)
         {
             return new GenericResponse<TResponse> { Status = true, Response = data, Message = "İşlem Başarılı", HttpCode = httpCode };

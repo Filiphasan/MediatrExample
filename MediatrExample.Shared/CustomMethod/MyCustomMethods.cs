@@ -67,7 +67,7 @@
         }
 
         /// <summary>
-        /// Pagination EF Core Custom, If u dont use this method, best way is ChunkSize for EF Core 6
+        /// Pagination EF Core Custom, If u dont use this method, other way is ChunkSize for EF Core 6
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
@@ -77,6 +77,33 @@
         public static IQueryable<T> TryPagination<T>(this IQueryable<T> query, int pageCount, int pageNumber)
         {
             return query.Skip(pageCount * pageNumber).Take(pageCount);
+        }
+
+        /// <summary>
+        /// Format GSM, GSM one of (+905XXXXXXXXX, 905XXXXXXXXX, 05XXXXXXXXX, 5XXXXXXXXX) return 5XXXXXXXXX other return string.Empty (I know this method is not best practices but I dont have enough level regex)
+        /// </summary>
+        /// <param name="gsm"></param>
+        /// <returns></returns>
+        public static string FormatGSMForTR(this string gsm)
+        {
+            string result = string.Empty;
+            string formatGsm = string.Empty;
+
+            if (gsm == null || gsm.Length < 10 || gsm.Length > 13)
+            {
+                return result;
+            }
+            else
+            {
+                if (gsm.StartsWith("+90")) formatGsm = gsm.Substring(3);
+                if (gsm.StartsWith("90")) formatGsm = gsm.Substring(2);
+                if (gsm.StartsWith("0")) formatGsm = gsm.Substring(1);
+                if (formatGsm.StartsWith("5") && formatGsm.Length == 10 && long.TryParse(gsm, out _))
+                {
+                    result = formatGsm;
+                }
+            }
+            return result ?? string.Empty;
         }
     }
 }

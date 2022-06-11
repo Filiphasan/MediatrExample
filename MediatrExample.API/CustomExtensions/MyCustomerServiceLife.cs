@@ -1,6 +1,8 @@
 ﻿using MediatrExample.API.Middleware;
 using MediatrExample.Core.Interfaces.Data;
+using MediatrExample.Core.Interfaces.Service;
 using MediatrExample.Data.Repositories;
+using MediatrExample.Service.HelpServices;
 
 namespace MediatrExample.API.CustomExtensions
 {
@@ -11,6 +13,7 @@ namespace MediatrExample.API.CustomExtensions
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddTransient<CustomExceptionHandler>();
+            services.AddTransient<IHashService, HashService>();
             return services;
         }
     }

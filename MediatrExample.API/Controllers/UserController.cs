@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MediatrExample.API.Controllers
 {
-    public class UserController : CustomBaseController<UserController>
+    public class UserController : CustomBaseController
     {
         private readonly IMediator _mediator;
 
-        public UserController(ILogger<UserController> logger, IMediator mediator) : base(logger)
+        public UserController(IMediator mediator)
         {
             _mediator = mediator;
         }

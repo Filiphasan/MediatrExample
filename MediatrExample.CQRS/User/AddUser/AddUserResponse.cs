@@ -4,5 +4,6 @@ namespace MediatrExample.CQRS.User.AddUser
 {
     public class AddUserResponse : UserDataModel
     {
+        public string AccessToken { get; set; } = string.Empty;
     }
 }

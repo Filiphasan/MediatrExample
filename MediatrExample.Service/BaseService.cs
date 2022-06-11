@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace MediatrExample.Service
 {
-    public class BaseService<TService> where TService : class, IService, new()
+    public class BaseService<TService>
     {
         protected readonly ILogger<TService> _logger;
 

@@ -13,15 +13,17 @@ namespace MediatrExample.CQRS.User.AddUser
     {
         private readonly IUserRepository _userRepository;
         private readonly IHashService _hashService;
-        public AddUserHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<IValidator<AddUserRequest>> validators, ILogger<AddUserHandler> logger, IUserRepository userRepository, IHashService hashService) : base(httpContextAccessor, validators, logger)
+        private readonly ITokenService _tokenService;
+        public AddUserHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<IValidator<AddUserRequest>> validators, ILogger<AddUserHandler> logger, IUserRepository userRepository, IHashService hashService, ITokenService tokenService) : base(httpContextAccessor, validators, logger)
         {
             _userRepository = userRepository;
             _hashService = hashService;
+            _tokenService = tokenService;
         }
 
         public async Task<GenericResponse<AddUserResponse>> Handle(AddUserRequest request, CancellationToken cancellationToken)
         {
-            await CheckValidate(request);
+            //await CheckValidate(request);
             try
             {
                 var response = new AddUserResponse();
@@ -39,12 +41,15 @@ namespace MediatrExample.CQRS.User.AddUser
 
                 var user = await _userRepository.InsertAsyncReturn(userEntity);
 
+                var token = await _tokenService.CreateTokenAsync(new Shared.DataModels.Auth.TokenUserModel { Id = user.Id, Name = user.FirstName, LastName = user.LastName });
+
                 response.FirstName = user.FirstName;
                 response.LastName = user.LastName;
                 response.Id = user.Id;
                 response.Gsm = user.Gsm;
                 response.Mail = user.Mail;
-                
+                response.AccessToken = token;
+
                 return GenericResponse<AddUserResponse>.Success(200, response);
             }
             catch (Exception ex)

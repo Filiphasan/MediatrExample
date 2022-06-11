@@ -3,21 +3,37 @@ using MediatR;
 using MediatrExample.API.CustomExtensions;
 using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.Data.Context;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OpenApi.Models;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
 
 // Add services to the container.
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(opt =>
+    {
+        opt.TokenValidationParameters = new TokenValidationParameters()
+        {
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTTokenOptions:SecretKey"])),
+            ValidateIssuerSigningKey = true,
+            ValidateLifetime = true,
+        };
+    });
+
 builder.Services.AddControllers();
 
 builder.Services.AddMediatR(Assembly.GetAssembly(typeof(GetAllUserRequest)));
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddMyServiceLifeCycles();
 builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(GetAllUserRequestValidator)));
+builder.Services.ConfigureMyOptionModels(Configuration);
 
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
 {
@@ -67,6 +83,7 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

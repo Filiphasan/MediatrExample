@@ -23,7 +23,7 @@ namespace MediatrExample.CQRS.User.AddUser
 
         public async Task<GenericResponse<AddUserResponse>> Handle(AddUserRequest request, CancellationToken cancellationToken)
         {
-            //await CheckValidate(request);
+            await CheckValidate(request);
             try
             {
                 var response = new AddUserResponse();

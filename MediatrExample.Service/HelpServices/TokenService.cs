@@ -29,9 +29,10 @@ namespace MediatrExample.Service.HelpServices
 
                 var claimList = new List<Claim>
                 {
-                    new Claim(ClaimTypes.NameIdentifier, model.Id.ToString()),
-                    new Claim(ClaimTypes.Name, $"{model.Name} {model.LastName}"),
-                    new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+                    new Claim(JwtRegisteredClaimNames.Sub, model.Id.ToString()),
+                    new Claim(JwtRegisteredClaimNames.Name, $"{model.Name} {model.LastName}"),
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.Ticks.ToString())
                 };
 
                 var jwtToken = new JwtSecurityToken(claims: claimList, expires: DateTime.Now.AddMinutes(_options.TokenExpireTimeMinute), signingCredentials: credentials);

@@ -17,7 +17,7 @@ namespace MediatrExample.API.Controllers
 
         [HttpGet("list")]
         [ProducesResponseType(typeof(GenericResponse<GetAllUserResponse>),200)]
-        public async Task<IActionResult> GetUserList([FromBody]GetAllUserRequest request)
+        public async Task<IActionResult> GetUserList([FromQuery]GetAllUserRequest request)
         {
             return CreateResultInstance(await _mediator.Send(request));
         }

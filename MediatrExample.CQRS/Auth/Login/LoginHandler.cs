@@ -58,7 +58,7 @@ namespace MediatrExample.CQRS.Auth.Login
                 response.Mail = user.Mail;
                 response.Gsm = user.Gsm;
                 
-                _logHelper.LogInfo("Giriş Yaptı", response);
+                _logHelper.LogInfo($"UserId:{user.Id} olan {user.FirstName} {user.LastName} Giriş Yaptı", response);
 
                 return GenericResponse<LoginResponse>.Success(response);
             }

@@ -1,5 +1,4 @@
 ﻿using MediatrExample.Core.Interfaces.Service;
-using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels.Auth;
 using MediatrExample.Shared.OptionModel;
 using Microsoft.Extensions.Logging;

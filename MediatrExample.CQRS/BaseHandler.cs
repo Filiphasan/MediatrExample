@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using MediatrExample.Core.Interfaces.Service;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using ValidationException = MediatrExample.Shared.CustomExceptions.ValidationException;
 
 namespace MediatrExample.CQRS

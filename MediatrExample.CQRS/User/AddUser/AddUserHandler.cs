@@ -14,13 +14,13 @@ namespace MediatrExample.CQRS.User.AddUser
         private readonly IUserRepository _userRepository;
         private readonly IHashService _hashService;
         private readonly ITokenService _tokenService;
-        public AddUserHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<IValidator<AddUserRequest>> validators, ILogger<AddUserHandler> logger, IUserRepository userRepository, IHashService hashService, ITokenService tokenService) : base(httpContextAccessor, validators, logger)
+        public AddUserHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<IValidator<AddUserRequest>> validators, ILogHelper<AddUserHandler> logHelper, IUserRepository userRepository, IHashService hashService, ITokenService tokenService) : base(httpContextAccessor, validators, logHelper)
         {
             _userRepository = userRepository;
             _hashService = hashService;
             _tokenService = tokenService;
         }
-
+        
         public async Task<GenericResponse<AddUserResponse>> Handle(AddUserRequest request, CancellationToken cancellationToken)
         {
             await CheckValidate(request);
@@ -54,7 +54,7 @@ namespace MediatrExample.CQRS.User.AddUser
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ExpectExceptionMessage());
+                _logHelper.LogError(ex);
                 return GenericResponse<AddUserResponse>.Error(500, ex.Message);
             }
         }

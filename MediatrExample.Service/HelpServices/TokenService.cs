@@ -21,7 +21,7 @@ namespace MediatrExample.Service.HelpServices
         }
 
 
-        public async Task<string> CreateTokenAsync(TokenUserModel model)
+        public Task<string> CreateTokenAsync(TokenUserModel model)
         {
             try
             {
@@ -37,12 +37,11 @@ namespace MediatrExample.Service.HelpServices
 
                 var jwtToken = new JwtSecurityToken(claims: claimList, expires: DateTime.Now.AddMinutes(_options.TokenExpireTimeMinute), signingCredentials: credentials);
                 var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-                return token;
+                return Task.FromResult(token);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                _logger.LogError(ex.ExpectExceptionMessage());
-                return String.Empty;
+                throw;
             }
         }
 

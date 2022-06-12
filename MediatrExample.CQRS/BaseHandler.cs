@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using MediatrExample.Core.Interfaces.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using ValidationException = MediatrExample.Shared.CustomExceptions.ValidationException;
@@ -9,16 +10,16 @@ namespace MediatrExample.CQRS
     {
         protected readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IEnumerable<IValidator<TRequest>> _validators;
-        protected readonly ILogger<THandler> _logger;
+        protected readonly ILogHelper<THandler> _logHelper;
 
-        public BaseHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<IValidator<TRequest>> validators, ILogger<THandler> logger)
+        public BaseHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<IValidator<TRequest>> validators, ILogHelper<THandler> logHelper)
         {
             _httpContextAccessor = httpContextAccessor;
             _validators = validators;
-            _logger = logger;
+            _logHelper = logHelper;
         }
 
-        public async Task CheckValidate(TRequest request)
+        public Task CheckValidate(TRequest request)
         {
             var errorsDictionary = new Dictionary<string, string[]>();
             if (_validators.Any())
@@ -37,12 +38,14 @@ namespace MediatrExample.CQRS
                             Key = propertyName,
                             Values = errorMessages.Distinct().ToArray()
                         })
-                    .ToDictionary(x => x.Key, x => x.Values);                
+                    .ToDictionary(x => x.Key, x => x.Values);
             }
             if (errorsDictionary.Any())
             {
                 throw new ValidationException(errorsDictionary);
             }
+
+            return Task.CompletedTask;
         }
     }
 }

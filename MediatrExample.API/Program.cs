@@ -37,11 +37,16 @@ builder.Services.ConfigureMyOptionModels(Configuration);
 
 builder.Services.AddEntityFrameworkNpgsql().AddDbContext<AppDbContext>(opt =>
 {
-    opt.UseNpgsql(Configuration.GetConnectionString("NpgSQLConnection"), npsqlOpt => npsqlOpt.CommandTimeout(150));
+    opt.UseNpgsql(Configuration.GetConnectionString("NpgSQLConnection"), npsqlOpt =>
+    {
+        npsqlOpt.CommandTimeout(150);
+        npsqlOpt.MigrationsAssembly("MediatrExample.Data");
+    });
 });
 // Above Code for "timestamp with time zone' literal cannot be generated for Local DateTime: a UTC DateTime is required" error solution
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+builder.Services.AddCors(options => { options.AddPolicy("AllowOrigin", policy => policy.AllowAnyOrigin()); });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -78,6 +83,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMyCustomMiddleware();
+
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseHttpsRedirection();
 

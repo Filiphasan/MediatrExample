@@ -14,7 +14,8 @@ namespace MediatrExample.API.CustomExtensions
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddTransient<CustomExceptionHandler>();
             services.AddTransient<IHashService, HashService>();
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddTransient<ITokenService, TokenService>();
+            services.AddTransient(typeof(ILogHelper<>), typeof(LogHelper<>));
             return services;
         }
     }

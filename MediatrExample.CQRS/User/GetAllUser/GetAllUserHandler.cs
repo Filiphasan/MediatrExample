@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using MediatrExample.Core.Interfaces.Data;
+using MediatrExample.Core.Interfaces.Service;
 using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
 using MediatrExample.Shared.DataModels.User.GetAllUser;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace MediatrExample.CQRS.User.GetAllUser
 {
@@ -13,7 +13,7 @@ namespace MediatrExample.CQRS.User.GetAllUser
     {
         private readonly IUserRepository _userRepository;
 
-        public GetAllUserHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<FluentValidation.IValidator<GetAllUserRequest>> validators, ILogger<GetAllUserHandler> logger, IUserRepository userRepository) : base(httpContextAccessor, validators, logger)
+        public GetAllUserHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<FluentValidation.IValidator<GetAllUserRequest>> validators, ILogHelper<GetAllUserHandler> logHelper, IUserRepository userRepository) : base(httpContextAccessor, validators, logHelper)
         {
             _userRepository = userRepository;
         }
@@ -41,7 +41,7 @@ namespace MediatrExample.CQRS.User.GetAllUser
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex.ExpectExceptionMessage());
+                _logHelper.LogError(ex);
                 return GenericResponse<GetAllUserResponse>.Error(500, ex.Message);
             }
         }

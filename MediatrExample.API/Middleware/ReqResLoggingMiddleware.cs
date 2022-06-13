@@ -19,11 +19,11 @@ namespace MediatrExample.API.Middleware
             {
                 var correlationId = context.Request.Headers["X-Correlation-ID"];
 
-                await LogRequest(context, correlationId);
+                //await LogRequest(context, correlationId);
 
-                await _next.Invoke(context);
+                await _next(context);
 
-                await LogResponse(context, correlationId);
+                //await LogResponse(context, correlationId);
             }
             catch (Exception ex)
             {
@@ -35,18 +35,37 @@ namespace MediatrExample.API.Middleware
         {
             var request = context.Request;
 
+            var requestBody = await ReadStreamInChunks(request.Body);
+
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"CorrelationId: {correlationId}");
             stringBuilder.AppendLine($"Method: {request.Method}");
+            stringBuilder.AppendLine($"Path: {request.Path}");
+            stringBuilder.AppendLine($"QueryString: { request.QueryString }");
+            stringBuilder.AppendLine($"RequestBody: { requestBody }");
+
+            _logger.LogInformation(stringBuilder.ToString());
         }
 
         private async Task LogResponse(HttpContext context, string correlationId)
         {
             var response = context.Response;
+            
 
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"CorrelationId: {correlationId}");
-            stringBuilder.AppendLine($"Method: {response.}");
+
+            _logger.LogInformation(stringBuilder.ToString());
+        }
+
+        private async Task<string> ReadStreamInChunks(Stream stream)
+        {
+            var newStream = new MemoryStream();
+            await stream.CopyToAsync(newStream);
+            newStream.Seek(0, SeekOrigin.Begin);
+            var reader = new StreamReader(newStream, Encoding.UTF8);
+            var body = reader.ReadToEnd();
+            return body ?? string.Empty;
         }
     }
 }

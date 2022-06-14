@@ -32,7 +32,7 @@
         public static string Capitalize(this string text)
         {
             string result = string.Empty;
-            text = text.ToLower();
+            text = text.ToLower().Trim();
             if (!string.IsNullOrEmpty(text) && text.Length < 2)
             {
                 result = text.ToUpper();

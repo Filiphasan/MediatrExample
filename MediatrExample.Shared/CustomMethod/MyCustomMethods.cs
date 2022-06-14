@@ -9,7 +9,7 @@
         /// <returns></returns>
         public static string GetDateTimeToMyString(this DateTime dateTime)
         {
-            return dateTime.ToString("yyyy.MM.dd HH:mm");
+            return dateTime.ToString("dd.MM.yyyy HH:mm");
         }
 
         /// <summary>
@@ -20,7 +20,7 @@
         public static string GetDateTimeToMyString(this DateTime? dateTime)
         {
             string result = string.Empty;
-            if (dateTime.HasValue) result = dateTime.Value.ToString("yyyy.MM.dd HH:mm");
+            if (dateTime.HasValue) result = dateTime.Value.ToString("dd.MM.yyyy HH:mm");
             return result;
         }
 
@@ -32,17 +32,14 @@
         public static string Capitalize(this string text)
         {
             string result = string.Empty;
+            text = text.ToLower();
             if (!string.IsNullOrEmpty(text) && text.Length < 2)
             {
                 result = text.ToUpper();
             }
             else if (!string.IsNullOrEmpty(text) && text.Length > 1)
             {
-                var strArr = text.ToLower().Split(' ');
-                foreach (var str in strArr)
-                {
-                    result = $"{result} {str[0].ToString().ToUpper()}{str[1..]}";
-                }
+                result = String.Join(" ", text.Split(' ').Select(x => x.First().ToString().ToUpper() + x[1..]));
             }
             return result;
         }
@@ -54,14 +51,10 @@
         /// <returns></returns>
         public static string ExpectExceptionMessage(this Exception exception)
         {
-            string result = string.Empty;
+            string result = exception.Message;
             if (exception.InnerException != null)
             {
-                result = exception.Message + exception.InnerException.ToString();
-            }
-            else
-            {
-                result = exception.Message;
+                result += exception.InnerException.ToString();
             }
             return result;
         }

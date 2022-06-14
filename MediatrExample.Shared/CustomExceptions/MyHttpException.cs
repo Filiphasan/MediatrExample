@@ -8,6 +8,9 @@ namespace MediatrExample.Shared.CustomExceptions
 {
     public class MyHttpException : Exception
     {
+        public MyHttpException(string exceptionMessage) : base(exceptionMessage)
+        {
+        }
         public MyHttpException(string exceptionMessage, Exception? exception) : base(exceptionMessage, exception)
         {
         }

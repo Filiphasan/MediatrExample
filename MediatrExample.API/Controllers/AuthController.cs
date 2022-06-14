@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using MediatrExample.CQRS.Auth.Login;
 using MediatrExample.Shared.DataModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediatrExample.API.Controllers

@@ -2,15 +2,11 @@
 using MediatR;
 using MediatrExample.Core.Interfaces.Data;
 using MediatrExample.Core.Interfaces.Service;
+using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
+using MediatrExample.Shared.DataModels.User.GetAllUser;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MediatrExample.CQRS.Auth.Login
 {
@@ -46,17 +42,15 @@ namespace MediatrExample.CQRS.Auth.Login
                     return GenericResponse<LoginResponse>.Error(400, "EMail or Password is Wrong!");
                 }
 
+                var userMap = user.ObjectMapper<UserDataModel, Core.Entities.User>();
+
                 response.AccessToken = await _tokenService.CreateTokenAsync(new Shared.DataModels.Auth.TokenUserModel
                 {
                     Id = user.Id,
                     Name = user.FirstName,
                     LastName = user.LastName,
                 });
-                response.Id = user.Id;
-                response.FirstName = user.FirstName;
-                response.LastName = user.LastName;
-                response.Mail = user.Mail;
-                response.Gsm = user.Gsm;
+                response.User = userMap;
                 
                 _logHelper.LogInfo($"UserId:{user.Id} olan {user.FirstName} {user.LastName} Giriş Yaptı", response);
 

@@ -2,8 +2,9 @@
 
 namespace MediatrExample.CQRS.Auth.Login
 {
-    public class LoginResponse : UserDataModel
+    public class LoginResponse
     {
         public string AccessToken { get; set; }
+        public UserDataModel User { get; set; }
     }
 }

@@ -112,5 +112,28 @@
             }
             return result ?? string.Empty;
         }
+
+        /// <summary>
+        /// Custom Basic Object Mapper
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TDestination"></typeparam>
+        /// <param name="obje"></param>
+        /// <returns></returns>
+        public static TDestination ObjectMapper<TDestination, TSource>(this TSource obje) where TSource : class, new() where TDestination : class, new()
+        {
+            var sourceObjProperties = obje.GetType().GetProperties();
+            var destination = new TDestination();
+            var destinationObjProperties = destination.GetType().GetProperties();
+            foreach (var sourceItem in sourceObjProperties)
+            {
+                if (destinationObjProperties.Any(x => x.Name == sourceItem.Name))
+                {
+                    var destinationItem = destinationObjProperties.FirstOrDefault(x => x.Name == sourceItem.Name);
+                    destinationItem.SetValue(destination, sourceItem.GetValue(obje));
+                }
+            }
+            return destination;
+        }
     }
 }

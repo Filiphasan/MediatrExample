@@ -2,6 +2,7 @@
 using MediatrExample.CQRS.User.AddUser;
 using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.CQRS.User.GetUser;
+using MediatrExample.CQRS.User.UpdatePwUser;
 using MediatrExample.Shared.DataModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -34,6 +35,14 @@ namespace MediatrExample.API.Controllers
         [ProducesResponseType(typeof(GenericResponse<GetUserResponse>), 200)]
         public async Task<IActionResult> GetUser([FromRoute] GetUserRequest request)
         {
+            return CreateResultInstance(await _mediator.Send(request));
+        }
+
+        [HttpPut("{UserId}")]
+        [ProducesResponseType(typeof(GenericResponse<UpdatePwUserResponse>), 200)]
+        public async Task<IActionResult> UpdatePwUser([FromRoute] int userId, [FromBody] UpdatePwUserRequest request)
+        {
+            request.UserId = userId;
             return CreateResultInstance(await _mediator.Send(request));
         }
     }

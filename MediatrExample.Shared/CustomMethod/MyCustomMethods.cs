@@ -1,4 +1,6 @@
-﻿namespace MediatrExample.Shared.CustomMethod
+﻿using FluentValidation;
+
+namespace MediatrExample.Shared.CustomMethod
 {
     public static class MyCustomMethods
     {
@@ -127,6 +129,25 @@
                 }
             }
             return destination;
+        }
+
+        /// <summary>
+        /// Custom Password Validator For FluentValidation
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="TProperty"></typeparam>
+        /// <param name="ruleBuilder"></param>
+        /// <param name="property"></param>
+        /// <param name="pwRegEx"></param>
+        /// <param name="errorMessage"></param>
+        /// <returns></returns>
+        public static IRuleBuilderOptions<T, string> CheckMyPassword<T>(this IRuleBuilder<T, string> ruleBuilder, string pwRegEx = null, string errorMessage = null)
+        {
+            if (pwRegEx is null) pwRegEx = @"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,16}$";
+            if (errorMessage is null) errorMessage = "Password must contain one uppercase, one lowercase, one number. Password length must beetween 6 and 16.";
+            if (pwRegEx is null) pwRegEx = @"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,16}$";
+            return ruleBuilder.NotNull().Matches(pwRegEx)
+                .WithMessage(errorMessage);
         }
     }
 }

@@ -12,10 +12,10 @@ namespace MediatrExample.Core.Interfaces.Data
     {
         Task<TEntity> GetByIdAsync(object id, bool hasTrack = false);
         TEntity GetById(object id, bool hasTrack = false);
-        Task<IEnumerable<TEntity>> GetAllAsync();
-        IEnumerable<TEntity> GetAll();
-        IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate);
-        IQueryable<TEntity> JoinWhere(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes);
+        Task<IEnumerable<TEntity>> GetAllAsync(bool hasTrack = false);
+        IEnumerable<TEntity> GetAll(bool hasTrack = false);
+        IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate, bool hasTrack = false);
+        IQueryable<TEntity> JoinWhere(Expression<Func<TEntity, bool>> predicate, bool hasTrack, params Expression<Func<TEntity, object>>[] includes);
         Task<TEntity> InsertAsyncReturn(TEntity entity);
         Task InsertAsync(TEntity entity);
         void Insert(TEntity entity);

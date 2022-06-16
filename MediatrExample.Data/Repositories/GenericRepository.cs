@@ -39,16 +39,28 @@ namespace MediatrExample.Data.Repositories
             _context.SaveChanges();
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public IEnumerable<TEntity> GetAll(bool hasTrack = false)
         {
-            var entities = _dbSet.ToList();
-            return entities;
+            if (hasTrack)
+            {
+                return _dbSet.ToList();
+            }
+            else
+            {
+                return _dbSet.AsNoTracking().ToList();
+            }
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<IEnumerable<TEntity>> GetAllAsync(bool hasTrack = false)
         {
-            var entities = await _dbSet.ToListAsync();
-            return entities;
+            if (hasTrack)
+            {
+                return await _dbSet.ToListAsync();
+            }
+            else
+            {
+                return await _dbSet.AsNoTracking().ToListAsync();
+            }
         }
 
         public TEntity GetById(object id, bool hasTrack = false)
@@ -97,9 +109,13 @@ namespace MediatrExample.Data.Repositories
             return data.Entity;
         }
 
-        public IQueryable<TEntity> JoinWhere(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        public IQueryable<TEntity> JoinWhere(Expression<Func<TEntity, bool>> predicate, bool hasTrack, params Expression<Func<TEntity, object>>[] includes)
         {
             IQueryable<TEntity> query = _dbSet;
+            if (!hasTrack)
+            {
+                query = query.AsNoTracking();
+            }
             query = query.Where(predicate);
             if (includes.Any())
             {
@@ -128,9 +144,14 @@ namespace MediatrExample.Data.Repositories
             return data.Entity;
         }
 
-        public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate)
+        public IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> predicate, bool hasTrack = false)
         {
-            return _dbSet.Where(predicate);
+            var query = _dbSet.Where(predicate);
+            if (!hasTrack)
+            {
+                query = query.AsNoTracking();
+            }
+            return query;
         }
     }
 }

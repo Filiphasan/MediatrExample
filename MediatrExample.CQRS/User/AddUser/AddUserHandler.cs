@@ -7,7 +7,6 @@ using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace MediatrExample.CQRS.User.AddUser
 {

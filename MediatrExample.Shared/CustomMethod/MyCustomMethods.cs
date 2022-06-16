@@ -146,8 +146,7 @@ namespace MediatrExample.Shared.CustomMethod
             if (pwRegEx is null) pwRegEx = @"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,16}$";
             if (errorMessage is null) errorMessage = "Password must contain one uppercase, one lowercase, one number. Password length must beetween 6 and 16.";
             if (pwRegEx is null) pwRegEx = @"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,16}$";
-            return ruleBuilder.NotNull().Matches(pwRegEx)
-                .WithMessage(errorMessage);
+            return ruleBuilder.NotNull().Matches(pwRegEx).WithMessage(errorMessage);
         }
     }
 }

@@ -18,14 +18,14 @@ namespace MediatrExample.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("list")]
+        [HttpGet]
         [ProducesResponseType(typeof(GenericResponse<GetAllUserResponse>), 200)]
         public async Task<IActionResult> GetUserList([FromQuery] GetAllUserRequest request)
         {
             return CreateResultInstance(await _mediator.Send(request));
         }
 
-        [HttpPost("add")]
+        [HttpPost]
         [ProducesResponseType(typeof(GenericResponse<AddUserResponse>), 200)]
         public async Task<IActionResult> AddUser([FromBody] AddUserRequest request)
         {

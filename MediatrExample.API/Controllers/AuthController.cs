@@ -16,7 +16,7 @@ namespace MediatrExample.API.Controllers
 
         [HttpPost("login")]
         [ProducesResponseType(typeof(GenericResponse<LoginResponse>), 200)]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             return CreateResultInstance(await _mediator.Send(request));
         }

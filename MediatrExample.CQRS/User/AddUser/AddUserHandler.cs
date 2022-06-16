@@ -2,9 +2,11 @@
 using MediatR;
 using MediatrExample.Core.Interfaces.Data;
 using MediatrExample.Core.Interfaces.Service;
+using MediatrExample.Shared.CustomExceptions;
 using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace MediatrExample.CQRS.User.AddUser
@@ -27,6 +29,11 @@ namespace MediatrExample.CQRS.User.AddUser
             try
             {
                 var response = new AddUserResponse();
+
+                var isEmailExist = await _userRepository.Where(x => x.Mail == request.Email).AnyAsync();
+                if (isEmailExist)
+                    throw new MyHttpException("Email Already Exist!");
+
                 string pwHash = await _hashService.SetSHA256HashAsync(request.Password);
                 await _hashService.DisposeAsync();
 
@@ -43,11 +50,7 @@ namespace MediatrExample.CQRS.User.AddUser
 
                 var token = await _tokenService.CreateTokenAsync(new Shared.DataModels.Auth.TokenUserModel { Id = user.Id, Name = user.FirstName, LastName = user.LastName });
 
-                response.FirstName = user.FirstName;
-                response.LastName = user.LastName;
-                response.Id = user.Id;
-                response.Gsm = user.Gsm;
-                response.Mail = user.Mail;
+                response = user.ObjectMapper<AddUserResponse, Core.Entities.User>();
                 response.AccessToken = token;
 
                 return GenericResponse<AddUserResponse>.Success(200, response);

@@ -34,9 +34,10 @@ namespace MediatrExample.CQRS.User.ForgotPwUser
                 
                 return GenericResponse<ForgotPwUserResponse>.Success(200, "Password reset link has been sent to your e-mail address.", response);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logHelper.LogError(ex);
+                return GenericResponse<ForgotPwUserResponse>.Error(500, ex.Message);
             }
         }
     }

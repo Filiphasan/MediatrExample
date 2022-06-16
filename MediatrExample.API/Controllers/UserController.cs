@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using MediatrExample.CQRS.User.AddUser;
+using MediatrExample.CQRS.User.ForgotPwUser;
 using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.CQRS.User.GetUser;
 using MediatrExample.CQRS.User.UpdatePwUser;
@@ -43,6 +44,13 @@ namespace MediatrExample.API.Controllers
         public async Task<IActionResult> UpdatePwUser([FromRoute] int userId, [FromBody] UpdatePwUserRequest request)
         {
             request.UserId = userId;
+            return CreateResultInstance(await _mediator.Send(request));
+        }
+
+        [HttpPost("forgot")]
+        [ProducesResponseType(typeof(GenericResponse<ForgotPwUserResponse>), 200)]
+        public async Task<IActionResult> ForgotPwUser([FromBody] ForgotPwUserRequest request)
+        {
             return CreateResultInstance(await _mediator.Send(request));
         }
     }

@@ -1,7 +1,9 @@
 ﻿using MediatrExample.API.Middleware;
 using MediatrExample.Core.Interfaces.Data;
 using MediatrExample.Core.Interfaces.Service;
+using MediatrExample.Core.Interfaces.Service.CacheService;
 using MediatrExample.Data.Repositories;
+using MediatrExample.Service.CacheServices;
 using MediatrExample.Service.HelpServices;
 
 namespace MediatrExample.API.CustomExtensions
@@ -10,6 +12,7 @@ namespace MediatrExample.API.CustomExtensions
     {
         public static IServiceCollection AddMyServiceLifeCycles(this IServiceCollection services)
         {
+            services.AddSingleton<IRedisCacheService, RedisCacheService>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddTransient<CustomExceptionHandler>();

@@ -73,7 +73,7 @@ builder.Services.AddSwaggerGen(opt =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (Configuration["Environment:EnvironmentName"] == "dev")
 {
     // Swagger Config
     app.UseSwagger();

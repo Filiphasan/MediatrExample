@@ -3,13 +3,15 @@ using MediatR;
 using MediatrExample.API.CustomExtensions;
 using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.Data.Context;
+using MediatrExample.Shared.DataModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.OpenApi.Models;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
@@ -17,15 +19,37 @@ var Configuration = builder.Configuration;
 // Add services to the container.
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(opt =>
+    .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
     {
         opt.TokenValidationParameters = new TokenValidationParameters()
         {
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTTokenOptions:SecretKey"])),
-            ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero //Skew default 300ms
+            ClockSkew = TimeSpan.Zero, //Skew default 300s
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true
         };
+        //opt.Events = new JwtBearerEvents
+        //{
+        //    OnChallenge = async (context) =>
+        //    {
+        //        context.HandleResponse();
+        //        if (context.AuthenticateFailure != null)
+        //        {
+        //            context.Response.StatusCode = 401;
+        //            var unAuthResponse = GenericResponse<string>.Error(401, "Unauthorized");
+        //            await context.HttpContext.Response.WriteAsync(JsonSerializer.Serialize(unAuthResponse));
+        //        }
+        //    },
+        //    OnAuthenticationFailed = async (context) =>
+        //    {
+        //        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+        //        {
+        //            context.Response.Headers.Add("Token-Expired", "true");
+        //        }
+        //    }
+        //};
     });
 
 builder.Services.AddControllers();
@@ -66,6 +90,30 @@ builder.Services.AddSwaggerGen(opt =>
         {
             Name = "Example License",
             Url = new Uri("https://example.com/license")
+        }
+    });
+    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = @"JWT Authorization header using the Bearer scheme. \r\n\r\n 
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      \r\n\r\nExample: 'Bearer 12345abcdef'",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+    opt.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Name = "Bearer",
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = "Bearer",
+                In = ParameterLocation.Header,
+                Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
+            },
+            new List<string>()
         }
     });
 });

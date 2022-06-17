@@ -13,6 +13,7 @@ namespace MediatrExample.API.CustomExtensions
         {
             app.UseMiddleware<CorrelationIdMiddleware>();
             app.UseMiddleware<CustomExceptionHandler>();
+            app.UseMiddleware<UnAuthorizedResponseMiddleware>();
             //app.UseMiddleware<ReqResLoggingMiddleware>();
             return app;
         }

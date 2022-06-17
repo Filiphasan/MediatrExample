@@ -25,7 +25,7 @@ namespace MediatrExample.Service.HelpServices
             try
             {
                 var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey));
-                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
 
                 var claimList = new List<Claim>
                 {
@@ -35,7 +35,7 @@ namespace MediatrExample.Service.HelpServices
                     new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.Ticks.ToString())
                 };
 
-                var jwtToken = new JwtSecurityToken(claims: claimList, expires: DateTime.Now.AddMinutes(_options.TokenExpireTimeMinute), signingCredentials: credentials);
+                var jwtToken = new JwtSecurityToken(claims: claimList,notBefore: DateTime.Now, expires: DateTime.Now.AddMinutes(_options.TokenExpireTimeMinute), signingCredentials: credentials);
                 var token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
                 return Task.FromResult(token);
             }

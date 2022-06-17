@@ -5,6 +5,7 @@ using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.CQRS.User.GetUser;
 using MediatrExample.CQRS.User.UpdatePwUser;
 using MediatrExample.Shared.DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediatrExample.API.Controllers
@@ -17,7 +18,7 @@ namespace MediatrExample.API.Controllers
         {
             _mediator = mediator;
         }
-
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(GenericResponse<GetAllUserResponse>), 200)]
         public async Task<IActionResult> GetUserList([FromQuery] GetAllUserRequest request)
@@ -26,6 +27,7 @@ namespace MediatrExample.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(GenericResponse<AddUserResponse>), 200)]
         public async Task<IActionResult> AddUser([FromBody] AddUserRequest request)
         {
@@ -48,6 +50,7 @@ namespace MediatrExample.API.Controllers
         }
 
         [HttpPost("forgot")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(GenericResponse<ForgotPwUserResponse>), 200)]
         public async Task<IActionResult> ForgotPwUser([FromBody] ForgotPwUserRequest request)
         {

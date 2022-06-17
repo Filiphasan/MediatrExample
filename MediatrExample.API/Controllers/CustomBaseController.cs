@@ -1,8 +1,10 @@
 ﻿using MediatrExample.Shared.DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediatrExample.API.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class CustomBaseController : ControllerBase

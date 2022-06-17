@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using MediatrExample.CQRS.Auth.Login;
 using MediatrExample.Shared.DataModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MediatrExample.API.Controllers
@@ -15,6 +16,7 @@ namespace MediatrExample.API.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(GenericResponse<LoginResponse>), 200)]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {

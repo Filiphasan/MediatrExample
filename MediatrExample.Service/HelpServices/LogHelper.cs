@@ -11,9 +11,9 @@ namespace MediatrExample.Service.HelpServices
     {
         private readonly ILogger<T> _logger;
         private readonly IHttpContextAccessor _httpContext;
-        public LogHelper(ILogger<T> logger, IHttpContextAccessor httpContext)
+        public LogHelper(ILoggerFactory logger, IHttpContextAccessor httpContext)
         {
-            _logger = logger;
+            _logger = logger.CreateLogger<T>();
             _httpContext = httpContext;
         }
         

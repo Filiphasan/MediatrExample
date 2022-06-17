@@ -6,6 +6,7 @@ using MediatrExample.Shared.CustomExceptions;
 using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
 using Microsoft.AspNetCore.Http;
+using EnLock;
 
 namespace MediatrExample.CQRS.User.UpdatePwUser
 {
@@ -25,12 +26,12 @@ namespace MediatrExample.CQRS.User.UpdatePwUser
             {
                 var response = new UpdatePwUserResponse();
 
-                var user = await _userRepository.GetByIdAsync(request.UserId);
+                var user = await _userRepository.Where(x => x.Id == request.UserId).ToFirstOrDefaultWithNoLockAsync();
 
                 var isOldPWCorrect = await _hashService.CheckSHA256HashAsync(user.PasswordHash, request.OldPassword);
-                
+
                 if (!isOldPWCorrect)
-                    throw new MyHttpException("Old Password is Incorrect!");
+                    return GenericResponse<UpdatePwUserResponse>.Error(400, "Old Password is Incorrect");
 
                 user.PasswordHash = await _hashService.SetSHA256HashAsync(request.NewPassword);
                 _userRepository.Update(user);

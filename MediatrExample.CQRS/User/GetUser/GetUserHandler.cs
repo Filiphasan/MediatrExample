@@ -6,6 +6,7 @@ using MediatrExample.Shared.CustomExceptions;
 using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
 using Microsoft.AspNetCore.Http;
+using EnLock;
 
 namespace MediatrExample.CQRS.User.GetUser
 {
@@ -23,7 +24,7 @@ namespace MediatrExample.CQRS.User.GetUser
             try
             {
                 var response = new GetUserResponse();
-                var user = _userRepository.GetById(request.UserId);
+                var user = await _userRepository.Where(x => x.Id == request.UserId).ToFirstOrDefaultWithNoLockAsync();
                 if (user is null)
                     throw new MyHttpException("User not found!");
 

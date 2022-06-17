@@ -5,7 +5,7 @@ using MediatrExample.Core.Interfaces.Service;
 using MediatrExample.Shared.CustomExceptions;
 using MediatrExample.Shared.DataModels;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using EnLock;
 
 namespace MediatrExample.CQRS.User.ForgotPwUser
 {
@@ -24,7 +24,7 @@ namespace MediatrExample.CQRS.User.ForgotPwUser
             {
                 var response = new ForgotPwUserResponse();
 
-                var user = await _userRepository.Where(x => x.Mail == request.Mail).FirstOrDefaultAsync();
+                var user = await _userRepository.Where(x => x.Mail == request.Mail).ToFirstOrDefaultWithNoLockAsync();
                 if (user is null)
                     throw new MyHttpException("Email not found!");
 

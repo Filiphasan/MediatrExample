@@ -67,11 +67,11 @@ namespace MediatrExample.Shared.CustomMethod
         /// <typeparam name="T"></typeparam>
         /// <param name="query"></param>
         /// <param name="pageCount"></param>
-        /// <param name="pageNumber"></param>
+        /// <param name="pageNumber">Zero for First Page</param>
         /// <returns></returns>
         public static IQueryable<T> TryPagination<T>(this IQueryable<T> query, int pageCount, int pageNumber)
         {
-            return query.Skip(pageCount * pageNumber).Take(pageCount);
+            return query.Skip(pageCount * (pageNumber - 1)).Take(pageCount);
         }
 
         /// <summary>

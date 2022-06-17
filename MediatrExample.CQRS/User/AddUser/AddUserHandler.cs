@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using EnLock;
+using FluentValidation;
 using MediatR;
 using MediatrExample.Core.Interfaces.Data;
 using MediatrExample.Core.Interfaces.Service;
@@ -29,9 +30,9 @@ namespace MediatrExample.CQRS.User.AddUser
             {
                 var response = new AddUserResponse();
 
-                var isEmailExist = await _userRepository.Where(x => x.Mail == request.Email).AnyAsync();
+                var isEmailExist = await _userRepository.Where(x => x.Mail == request.Email).ToAnyWithNoLockAsync();
                 if (isEmailExist)
-                    throw new MyHttpException("Email Already Exist!");
+                    return GenericResponse<AddUserResponse>.Error(400,"Email Already Exist!");
 
                 string pwHash = await _hashService.SetSHA256HashAsync(request.Password);
                 await _hashService.DisposeAsync();

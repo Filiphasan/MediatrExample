@@ -6,6 +6,7 @@ using MediatrExample.Shared.DataModels;
 using MediatrExample.Shared.DataModels.User.GetAllUser;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using EnLock;
 
 namespace MediatrExample.CQRS.User.GetAllUser
 {
@@ -32,7 +33,7 @@ namespace MediatrExample.CQRS.User.GetAllUser
                     Gsm = x.Gsm,
                     Id = x.Id,
                     Mail = x.Mail,
-                }).TryPagination(request.PageCount, request.PageNumber).ToListAsync();
+                }).TryPagination(request.PageCount, request.PageNumber).ToListWithNoLockAsync();
 
                 response.TotalCount = await query.CountAsync();
                 response.UserList = data;

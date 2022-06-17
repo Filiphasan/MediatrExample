@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using EnLock;
+using FluentValidation;
 using MediatR;
 using MediatrExample.Core.Interfaces.Data;
 using MediatrExample.Core.Interfaces.Service;
@@ -6,7 +7,6 @@ using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
 using MediatrExample.Shared.DataModels.User.GetAllUser;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 
 namespace MediatrExample.CQRS.Auth.Login
 {
@@ -30,7 +30,7 @@ namespace MediatrExample.CQRS.Auth.Login
             {
                 var response = new LoginResponse();
 
-                var user = await _userRepository.Where(x => x.Mail == request.Mail).FirstOrDefaultAsync();
+                var user = await _userRepository.Where(x => x.Mail == request.Mail).ToFirstOrDefaultWithNoLockAsync();
                 
                 if (user is null)
                 {
@@ -52,7 +52,7 @@ namespace MediatrExample.CQRS.Auth.Login
                 });
                 response.User = userMap;
                 
-                _logHelper.LogInfo($"UserId:{user.Id} olan {user.FirstName} {user.LastName} Giriş Yaptı", response);
+                _logHelper.LogInfo($"UserId:{user.Id} and User:{user.FirstName} {user.LastName} Login.", response);
 
                 return GenericResponse<LoginResponse>.Success(response);
             }

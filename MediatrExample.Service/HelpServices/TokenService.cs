@@ -31,8 +31,7 @@ namespace MediatrExample.Service.HelpServices
                 {
                     new Claim(JwtRegisteredClaimNames.Sub, model.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Name, $"{model.Name} {model.LastName}"),
-                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.Ticks.ToString())
+                    new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                 };
 
                 var jwtToken = new JwtSecurityToken(claims: claimList,notBefore: DateTime.Now, expires: DateTime.Now.AddMinutes(_options.TokenExpireTimeMinute), signingCredentials: credentials);

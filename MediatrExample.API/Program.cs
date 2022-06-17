@@ -3,7 +3,6 @@ using MediatR;
 using MediatrExample.API.CustomExtensions;
 using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.Data.Context;
-using MediatrExample.Shared.DataModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -11,7 +10,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
-using System.Text.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;

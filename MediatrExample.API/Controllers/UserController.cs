@@ -18,7 +18,7 @@ namespace MediatrExample.API.Controllers
         {
             _mediator = mediator;
         }
-        [Authorize]
+        
         [HttpGet]
         [ProducesResponseType(typeof(GenericResponse<GetAllUserResponse>), 200)]
         public async Task<IActionResult> GetUserList([FromQuery] GetAllUserRequest request)

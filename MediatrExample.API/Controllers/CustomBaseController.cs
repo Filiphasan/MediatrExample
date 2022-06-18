@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MediatrExample.API.Controllers
 {
-    
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class CustomBaseController : ControllerBase

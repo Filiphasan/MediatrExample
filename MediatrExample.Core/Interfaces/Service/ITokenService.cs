@@ -2,7 +2,7 @@
 
 namespace MediatrExample.Core.Interfaces.Service
 {
-    public interface ITokenService : IService
+    public interface ITokenService : IServiceDisposable
     {
         /// <summary>
         /// Create JWT

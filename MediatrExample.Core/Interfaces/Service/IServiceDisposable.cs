@@ -1,6 +1,6 @@
 ﻿namespace MediatrExample.Core.Interfaces.Service
 {
-    public interface IService : IAsyncDisposable
+    public interface IServiceDisposable : IAsyncDisposable
     {
     }
 }

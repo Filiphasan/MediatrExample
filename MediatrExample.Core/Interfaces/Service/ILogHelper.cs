@@ -5,6 +5,6 @@
         void LogError(Exception exception);
         void LogError(string message, Exception exception);
         void LogInfo(string message);
-        void LogInfo(string message, object obje);
+        void LogInfo<TObj>(string message, TObj obje) where TObj : class, new();
     }
 }

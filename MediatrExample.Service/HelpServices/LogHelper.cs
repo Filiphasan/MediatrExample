@@ -54,7 +54,7 @@ namespace MediatrExample.Service.HelpServices
             _logger.LogInformation(stringBuilder.ToString());
         }
 
-        public void LogInfo(string message, object obje)
+        public void LogInfo<TObj>(string message, TObj obje) where TObj : class, new()
         {
             string correlationId = GetCorrelationId();
             StringBuilder stringBuilder = new StringBuilder();

@@ -1,0 +1,10 @@
+version: '3.4'
+
+services:
+  mediatrexample.api:
+    image: ${DOCKER_REGISTRY-}mediatrexampleapi
+    build:
+      context: .
+      dockerfile: MediatrExample.API/Dockerfile
+    ports:
+      - "5001:80" 

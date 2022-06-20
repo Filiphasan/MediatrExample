@@ -16,7 +16,7 @@ namespace MediatrExample.Service.HelpServices
             _logger = logger.CreateLogger<T>();
             _httpContext = httpContext;
         }
-        
+
         private string GetCorrelationId()
         {
             return _httpContext.HttpContext.TraceIdentifier;
@@ -60,9 +60,53 @@ namespace MediatrExample.Service.HelpServices
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"CorrelationId: {correlationId}");
             stringBuilder.AppendLine($"Message: {message}");
-            stringBuilder.AppendLine($"Object: {JsonSerializer.Serialize(obje)}");
+            stringBuilder.AppendLine($"Object: {JsonSerializer.Serialize(SetMaskSensitiveProp2(obje))}");
 
             _logger.LogInformation(stringBuilder.ToString());
+        }
+
+        private TObj SetMaskSensitiveProp<TObj>(TObj obj) where TObj : class, new()
+        {
+            var newObj = obj.CreateDeepCopy();
+            var properties = newObj.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.IsBasicProp())
+                {
+                    if (property.IsSensitiveProp())
+                    {
+                        property.SetValue(newObj, "********");
+                    }
+                }
+                else
+                {
+                    var value = property.GetValue(newObj);
+                    property.SetValue(newObj, SetMaskSensitiveProp(value));
+                }
+            }
+            return newObj;
+        }
+
+        private TObj SetMaskSensitiveProp2<TObj>(TObj obj) where TObj : class, new()
+        {
+            var newObj = new TObj();
+            var properties = obj.GetType().GetProperties();
+            foreach (var property in properties)
+            {
+                if (property.IsBasicProp())
+                {
+                    if (property.IsSensitiveProp())
+                    {
+                        property.SetValue(newObj, "********");
+                    }
+                }
+                else
+                {
+                    var value = property.GetValue(obj);
+                    property.SetValue(newObj, SetMaskSensitiveProp(value));
+                }
+            }
+            return newObj;
         }
     }
 }

@@ -1,4 +1,8 @@
 ﻿using FluentValidation;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml.Serialization;
 
 namespace MediatrExample.Shared.CustomMethod
 {
@@ -147,6 +151,45 @@ namespace MediatrExample.Shared.CustomMethod
             if (errorMessage is null) errorMessage = "Password must contain one uppercase, one lowercase, one number. Password length must beetween 6 and 16.";
             if (pwRegEx is null) pwRegEx = @"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,16}$";
             return ruleBuilder.NotNull().Matches(pwRegEx).WithMessage(errorMessage);
+        }
+
+        /// <summary>
+        /// Check PropertyInfo Type Name is Basic Property Type such as string, int
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static bool IsBasicProp(this PropertyInfo property)
+        {
+            string[] basicPropType = new string[] { "int", "string", "bool", "double", "float", "decimal", "long", "short", "byte", "ulong", "uint", "ushort", "sbyte", "char", "datetime", "datetimeoffset", "timespan", "guid" };
+            return basicPropType.Any(x => x == property.PropertyType.Name.ToLower());
+        }
+
+        /// <summary>
+        /// Check PropertyInfo is Sensitive Property such as Password, UserName
+        /// </summary>
+        /// <param name="property"></param>
+        /// <returns></returns>
+        public static bool IsSensitiveProp(this PropertyInfo property)
+        {
+            string[] sensitivePropName = new string[] { "password", "pw", "firstname", "lastname", "pw_hash", "mail", "email", "accesstoken", "refreshtoken", "gsm", "phone", "phonenumber" };
+            return sensitivePropName.Any(x => x == property.Name.ToLower());
+        }
+
+        /// <summary>
+        /// Object Deep Copy, I think this is not the best way to deep copy
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static T CreateDeepCopy<T>(this T obj)
+        {
+            using (var ms = new MemoryStream())
+            {
+                XmlSerializer serializer = new XmlSerializer(obj.GetType());
+                serializer.Serialize(ms, obj);
+                ms.Seek(0, SeekOrigin.Begin);
+                return (T)serializer.Deserialize(ms);
+            }
         }
     }
 }

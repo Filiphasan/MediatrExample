@@ -1,5 +1,9 @@
 version: '3.4'
 
+networks:
+  mediatrexample_dev:
+    driver: bridge 
+
 services:
   mediatrexample.api:
     image: ${DOCKER_REGISTRY-}mediatrexampleapi
@@ -8,3 +12,34 @@ services:
       dockerfile: MediatrExample.API/Dockerfile
     ports:
       - "5001:80" 
+    networks:
+      - mediatrexample_dev
+    depends_on:
+      - "pgsql_image"
+      - "redis_image"
+  pgsql_image:
+    image: postgres:latest
+    ports:
+      - "5432"
+    restart: always
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+      - ./dbscripts/seed.sql :/docker-entrypoint-initdb.d/seed.sql
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: "ecommerce"
+    networks:
+      - mediatrexample_dev
+  redis_image:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - mediatrexample_dev
+    ports:
+      - "6380"
+    restart: always
+
+volumes:
+  db_volume:

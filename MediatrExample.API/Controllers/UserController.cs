@@ -20,6 +20,7 @@ namespace MediatrExample.API.Controllers
         }
         
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(GenericResponse<GetAllUserResponse>), 200)]
         public async Task<IActionResult> GetUserList([FromQuery] GetAllUserRequest request)
         {

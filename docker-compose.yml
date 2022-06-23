@@ -5,8 +5,25 @@ networks:
     driver: bridge 
 
 services:
+  pgsql_image:
+    image: postgres:latest
+    container_name: postgersql_db
+    restart: always
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "123456"
+      POSTGRES_DB: "ecommerce"
+    ports: 
+      - 5432:5432
+    networks:
+      - mediatrexample_dev
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
   mediatrexample.api:
     image: ${DOCKER_REGISTRY-}mediatrexampleapi
+    container_name: mediatr_example
+    command: ["./wait-for-it.sh", "pgsql_image:5432"]
     build:
       context: .
       dockerfile: MediatrExample.API/Dockerfile
@@ -14,25 +31,17 @@ services:
       - "5001:80" 
     networks:
       - mediatrexample_dev
+    links:
+      - pgsql_image 
     depends_on:
       - "pgsql_image"
       - "redis_image"
-  pgsql_image:
-    image: postgres:latest
-    ports:
-      - "5432"
-    restart: always
-    volumes:
-      - db_volume:/var/lib/postgresql/data
-      - ./dbscripts/seed.sql :/docker-entrypoint-initdb.d/seed.sql
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "123456"
-      POSTGRES_DB: "ecommerce"
-    networks:
-      - mediatrexample_dev
+      - CONNECTIONSTRINGS__NpgSQLConnection=User ID=postgres;Password=123456;Host=pgsql_image;Port=5432;Database=ecommerce
+  
   redis_image:
     image: 'bitnami/redis:latest'
+    container_name: redis_db
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
     networks:
@@ -40,6 +49,4 @@ services:
     ports:
       - "6380"
     restart: always
-
-volumes:
-  db_volume:
+    

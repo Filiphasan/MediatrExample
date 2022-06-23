@@ -144,4 +144,17 @@ app.MapControllers();
 
 app.MapGet("/", () => "Server is running...");
 
+#region Auto Run Pending Migration
+using (var scope = app.Services.CreateAsyncScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<AppDbContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
+#endregion
+
+
 app.Run();

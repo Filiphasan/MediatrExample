@@ -19,9 +19,15 @@ namespace MediatrExample.Service.CacheServices
             _configuration = configuration;
             _redisCacheOptions = new RedisCacheOptions()
             {
-                Configuration = _configuration.GetConnectionString("Redis")
+                ConfigurationOptions = new ConfigurationOptions
+                {
+                    EndPoints = { $"{_configuration["Redis:Host"]}:{_configuration["Redis:Port"]}"},
+                    Password = _configuration["Redis:Password"],
+                    //Ssl = true,
+                    //AbortOnConnectFail = false
+                }
             };
-            _connectionMultiplexer = ConnectionMultiplexer.Connect(_redisCacheOptions.Configuration);
+            _connectionMultiplexer = ConnectionMultiplexer.Connect(_redisCacheOptions.ConfigurationOptions);
             _database = _connectionMultiplexer.GetDatabase();
             
         }

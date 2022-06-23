@@ -28,7 +28,7 @@ services:
       context: .
       dockerfile: MediatrExample.API/Dockerfile
     ports:
-      - "5001:80" 
+      - "5001:5001" 
     networks:
       - mediatrexample_dev
     links:
@@ -38,15 +38,15 @@ services:
       - "redis_image"
     environment:
       - CONNECTIONSTRINGS__NpgSQLConnection=User ID=postgres;Password=123456;Host=pgsql_image;Port=5432;Database=ecommerce
+      - Redis__Host=0.0.0.0
+      - Redis__Port=6380
+      - Redis__Password=123456
   
   redis_image:
-    image: 'bitnami/redis:latest'
+    image: 'redis:6.2.5-alpine'
     container_name: redis_db
-    environment:
-      - ALLOW_EMPTY_PASSWORD=yes
-    networks:
-      - mediatrexample_dev
-    ports:
-      - "6380"
     restart: always
+    ports:
+      - '6380:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass 123456
     

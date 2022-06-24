@@ -34,7 +34,7 @@ namespace MediatrExample.CQRS.User.UpdatePwUser
                     return GenericResponse<UpdatePwUserResponse>.Error(400, "Old Password is Incorrect");
 
                 user.PasswordHash = await _hashService.SetSHA256HashAsync(request.NewPassword);
-                _userRepository.Update(user);
+                await _userRepository.AttachUpdateAsync(user, "PasswordHash");
 
                 response = user.ObjectMapper<UpdatePwUserResponse, Core.Entities.User>();
 

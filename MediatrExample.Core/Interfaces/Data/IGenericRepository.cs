@@ -20,5 +20,7 @@ namespace MediatrExample.Core.Interfaces.Data
         TEntity Update(TEntity entity);
         void SaveChanges();
         Task SaveChangesAsync();
+        Task AttachUpdateAsync(TEntity entity, params string[] propsName);
+        Task AttachUpdateAsync(TEntity entity, params Expression<Func<TEntity, object>>[] expressions);
     }
 }

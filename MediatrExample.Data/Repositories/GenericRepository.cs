@@ -17,6 +17,26 @@ namespace MediatrExample.Data.Repositories
             _dbSet = _context.Set<TEntity>();
         }
 
+        public async Task AttachUpdateAsync(TEntity entity, params string[] propsName)
+        {
+            _dbSet.Attach(entity);
+            foreach (var prop in propsName)
+            {
+                _context.Entry(entity).Property(prop).IsModified = true;
+            }
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AttachUpdateAsync<TProperty>(TEntity entity, params Expression<Func<TEntity, TProperty>>[] expressions)
+        {
+            _dbSet.Attach(entity);
+            foreach (var expression in expressions)
+            {
+                _context.Entry(entity).Property(expression).IsModified = true;
+            }
+            await _context.SaveChangesAsync();
+        }
+
         public void Delete(TEntity entity)
         {
             _dbSet.Remove(entity);

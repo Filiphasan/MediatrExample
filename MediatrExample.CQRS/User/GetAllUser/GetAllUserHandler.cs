@@ -7,16 +7,19 @@ using MediatrExample.Shared.DataModels.User.GetAllUser;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using EnLock;
+using MediatrExample.Core.Interfaces.Service.CacheService;
 
 namespace MediatrExample.CQRS.User.GetAllUser
 {
     public class GetAllUserHandler : BaseHandler<GetAllUserRequest, GenericResponse<GetAllUserResponse>, GetAllUserHandler>, IRequestHandler<GetAllUserRequest, GenericResponse<GetAllUserResponse>>
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRedisCacheService _redisCacheService;
 
-        public GetAllUserHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<FluentValidation.IValidator<GetAllUserRequest>> validators, ILogHelper<GetAllUserHandler> logHelper, IUserRepository userRepository) : base(httpContextAccessor, validators, logHelper)
+        public GetAllUserHandler(IHttpContextAccessor httpContextAccessor, IEnumerable<FluentValidation.IValidator<GetAllUserRequest>> validators, ILogHelper<GetAllUserHandler> logHelper, IUserRepository userRepository, IRedisCacheService redisCacheService) : base(httpContextAccessor, validators, logHelper)
         {
             _userRepository = userRepository;
+            _redisCacheService = redisCacheService;
         }
 
         public async Task<GenericResponse<GetAllUserResponse>> Handle(GetAllUserRequest request, CancellationToken cancellationToken)

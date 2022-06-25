@@ -23,7 +23,7 @@ namespace MediatrExample.Service.CacheServices
                 {
                     EndPoints = { $"{_configuration["Redis:Host"]}:{_configuration["Redis:Port"]}"},
                     Password = _configuration["Redis:Password"],
-                    //Ssl = true,
+                    Ssl = true,
                     //AbortOnConnectFail = false
                 }
             };

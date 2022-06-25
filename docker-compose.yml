@@ -1,52 +1,55 @@
 version: '3.4'
 
 networks:
-  mediatrexample_dev:
-    driver: bridge 
+    mediatrexample_dev:
+        driver: bridge
+    redis_ntwrk:
+        driver: bridge
+    pgsql_ntwrk:
+        driver: bridge
 
 services:
-  pgsql_image:
-    image: postgres:latest
-    container_name: postgersql_db
-    restart: always
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "123456"
-      POSTGRES_DB: "ecommerce"
-    ports: 
-      - 5432:5432
-    networks:
-      - mediatrexample_dev
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    pgsql_image:
+        image: postgres:latest
+        container_name: postgersql_db
+        restart: always
+        environment:
+            POSTGRES_USER: "postgres"
+            POSTGRES_PASSWORD: "123456"
+            POSTGRES_DB: "ecommerce"
+        ports:
+            - 5432:5432
+        networks:
+            - pgsql_ntwrk
 
-  mediatrexample.api:
-    image: ${DOCKER_REGISTRY-}mediatrexampleapi
-    container_name: mediatr_example
-    command: ["./wait-for-it.sh", "pgsql_image:5432"]
-    build:
-      context: .
-      dockerfile: MediatrExample.API/Dockerfile
-    ports:
-      - "5001:5001" 
-    networks:
-      - mediatrexample_dev
-    links:
-      - pgsql_image 
-    depends_on:
-      - "pgsql_image"
-      - "redis_image"
-    environment:
-      - CONNECTIONSTRINGS__NpgSQLConnection=User ID=postgres;Password=123456;Host=pgsql_image;Port=5432;Database=ecommerce
-      - Redis__Host=0.0.0.0
-      - Redis__Port=6380
-      - Redis__Password=123456
-  
-  redis_image:
-    image: 'redis:6.2.5-alpine'
-    container_name: redis_db
-    restart: always
-    ports:
-      - '6380:6379'
-    command: redis-server --save 20 1 --loglevel warning --requirepass 123456
-    
+    mediatrexample.api:
+        image: ${DOCKER_REGISTRY-}mediatrexampleapi
+        container_name: mediatr_example
+        command: [ "./wait-for-it.sh", "pgsql_image:5432" ]
+        build:
+            context: .
+            dockerfile: MediatrExample.API/Dockerfile
+        networks:
+            - mediatrexample_dev
+        links:
+            - pgsql_image
+            - redis_image
+        environment:
+            - CONNECTIONSTRINGS__NpgSQLConnection=User ID=postgres;Password=123456;Host=pgsql_image;Port=5432;Database=ecommerce
+            - Redis__Host=0.0.0.0
+            - Redis__Port=6380
+            - Redis__Password=123456
+
+    redis_image:
+        image: 'redis:alpine'
+        container_name: redis_db
+        environment:
+            - ALLOW_EMPTY_PASSWORD=no
+            - REDIS_PASSWORD=123456
+            - REDIS_PORT=6380
+            - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+        ports:
+            - '6380:6379'
+        command: redis-server --save 60 1 --loglevel warning
+        networks:
+            - redis_ntwrk

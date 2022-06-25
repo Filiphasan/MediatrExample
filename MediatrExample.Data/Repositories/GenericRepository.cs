@@ -27,7 +27,7 @@ namespace MediatrExample.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AttachUpdateAsync<TProperty>(TEntity entity, params Expression<Func<TEntity, TProperty>>[] expressions)
+        public async Task AttachUpdateAsync(TEntity entity, params Expression<Func<TEntity, object>>[] expressions)
         {
             _dbSet.Attach(entity);
             foreach (var expression in expressions)

@@ -15,12 +15,12 @@ namespace MediatrExample.Shared.DataModels
 
         public static GenericResponse<TResponse> Success(TResponse data)
         {
-            return new GenericResponse<TResponse> { Status = true, Response = data, Message = "İşlem Başarılı", HttpCode = 200 };
+            return new GenericResponse<TResponse> { Status = true, Response = data, Message = "Success", HttpCode = 200 };
         }
 
         public static GenericResponse<TResponse> Success(int httpCode, TResponse data)
         {
-            return new GenericResponse<TResponse> { Status = true, Response = data, Message = "İşlem Başarılı", HttpCode = httpCode };
+            return new GenericResponse<TResponse> { Status = true, Response = data, Message = "Success", HttpCode = httpCode };
         }
 
         public static GenericResponse<TResponse> Success(int httpCode, string message, TResponse data)
@@ -30,7 +30,7 @@ namespace MediatrExample.Shared.DataModels
 
         public static GenericResponse<TResponse> Error(int httpCode, params string[] errors)
         {
-            return new GenericResponse<TResponse> { Status = false, Message = "İşlem Başarısız", HttpCode = httpCode, Errors = errors };
+            return new GenericResponse<TResponse> { Status = false, Message = "Error", HttpCode = httpCode, Errors = errors };
         }
     }
 }

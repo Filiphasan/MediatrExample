@@ -3,11 +3,13 @@ using MediatR;
 using MediatrExample.API.CustomExtensions;
 using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.Data.Context;
+using MediatrExample.Service.Utilities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 using System.Reflection;
 using System.Text;
 
@@ -51,6 +53,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddControllers();
+
+var multiplexer = RedisUtility.ConnectRedis(Configuration);
+builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
 
 builder.Services.AddMediatR(Assembly.GetAssembly(typeof(GetAllUserRequest)));
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -155,6 +160,5 @@ using (var scope = app.Services.CreateAsyncScope())
     }
 }
 #endregion
-
 
 app.Run();

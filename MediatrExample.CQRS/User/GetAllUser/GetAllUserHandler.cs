@@ -26,8 +26,12 @@ namespace MediatrExample.CQRS.User.GetAllUser
         {
             try
             {
+                await _redisCacheService.SetAsync("deneme", "deneme icerigi");
+
                 var response = new GetAllUserResponse();
                 var query = _userRepository.GetUserList(request.Query);
+
+                var valueee = await _redisCacheService.GetAsync<string>("deneme");
 
                 var data = await query.Select(x => new UserDataModel
                 {

@@ -26,7 +26,7 @@ namespace MediatrExample.CQRS.User.GetAllUser
         {
             try
             {
-                await _redisCacheService.SetAsync("deneme", "deneme icerigi");
+                var ping = await _redisCacheService.PingAsync();
 
                 var response = new GetAllUserResponse();
                 var query = _userRepository.GetUserList(request.Query);

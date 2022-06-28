@@ -12,7 +12,7 @@ namespace MediatrExample.API.CustomExtensions
     {
         public static IServiceCollection AddMyServiceLifeCycles(this IServiceCollection services)
         {
-            services.AddSingleton<IRedisCacheService, RedisCacheService>();
+            services.AddScoped<IRedisCacheService, RedisCacheService>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddTransient<CustomExceptionHandler>();

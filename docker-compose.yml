@@ -24,9 +24,9 @@ services:
         restart: always
         environment:
             - REDIS_PASSWORD=RRnFPZ93tjBHB9W62p
-            - REDIS_PORT=6380
+            - REDIS_PORT=6379
         ports:
-            - '6380:6379'
+            - '6379:6379'
         command: [ "redis-server" ]
         networks:
             - mediatrexample
@@ -48,5 +48,5 @@ services:
         environment:
             - CONNECTIONSTRINGS__NpgSQLConnection=User ID=postgres;Password=123456;Host=pgsql_image;Port=5432;Database=ecommerce
             - Redis__Host=redis_image
-            - Redis__Port=6380
+            - Redis__Port=6379
             - Redis__Password=RRnFPZ93tjBHB9W62p

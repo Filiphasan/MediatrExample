@@ -2,6 +2,6 @@
 {
     public interface IRedisCacheService : ICacheService
     {
-       
+        Task<TimeSpan> PingAsync();
     }
 }

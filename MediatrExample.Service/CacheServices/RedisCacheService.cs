@@ -26,11 +26,15 @@ namespace MediatrExample.Service.CacheServices
 
         public async Task SetAsync<T>(string key, T value, int expiredInMinute = 120)
         {
-            //RedisKey key1 = new RedisKey(key);
-            //var valueStr = JsonSerializer.Serialize(value);
-            //RedisValue redisValue = new RedisValue(valueStr);
-            //await _database.StringSetAsync(key1, redisValue, TimeSpan.FromMinutes(expiredInMinute));
-            var pong = await _database.PingAsync();
+            RedisKey redisKey = new RedisKey(key);
+            var valueStr = JsonSerializer.Serialize(value);
+            RedisValue redisValue = new RedisValue(valueStr);
+            await _database.StringSetAsync(redisKey, redisValue, TimeSpan.FromMinutes(expiredInMinute));
+        }
+
+        public async Task<TimeSpan> PingAsync()
+        {
+            return await _database.PingAsync();
         }
     }
 }

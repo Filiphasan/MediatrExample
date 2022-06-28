@@ -17,12 +17,12 @@
         /// <param name="value">Value want to set to the cache</param>
         /// <param name="expiredInMinute">Cache Expired Add Time on Now, Minute</param>
         /// <returns></returns>
-        Task SetAsync<T>(string key, T value, int expiredInMinute = 120);
+        Task<bool> SetAsync<T>(string key, T value, int expiredInMinute = 120);
         /// <summary>
         /// Remove Cache with keys, if exist
         /// </summary>
         /// <param name="key">Cache Keys</param>
         /// <returns></returns>
-        Task RemoveAsync(string key);
+        Task<bool> RemoveAsync(string key);
     }
 }

@@ -6,7 +6,7 @@ namespace MediatrExample.Service.CacheServices
 {
     public class RedisCacheService : IRedisCacheService
     {
-        private IDatabase _database;
+        private readonly IDatabase _database;
         private static IConnectionMultiplexer _connectionMultiplexer;
         public RedisCacheService(IConnectionMultiplexer connectionMultiplexer)
         {
@@ -16,20 +16,27 @@ namespace MediatrExample.Service.CacheServices
 
         public async Task<T> GetAsync<T>(string key)
         {
+            var redisKey = new RedisKey(key);
+            var redisValue = await _database.StringGetAsync(redisKey);
+            if (redisValue.HasValue)
+            {
+                T? value = JsonSerializer.Deserialize<T>(redisValue.ToString());
+                return value;
+            }
             return default;
         }
 
-        public async Task RemoveAsync(string key)
+        public async Task<bool> RemoveAsync(string key)
         {
             throw new NotImplementedException();
         }
 
-        public async Task SetAsync<T>(string key, T value, int expiredInMinute = 120)
+        public async Task<bool> SetAsync<T>(string key, T value, int expiredInMinute = 120)
         {
-            RedisKey redisKey = new RedisKey(key);
+            RedisKey redisKey = new(key);
             var valueStr = JsonSerializer.Serialize(value);
-            RedisValue redisValue = new RedisValue(valueStr);
-            await _database.StringSetAsync(redisKey, redisValue, TimeSpan.FromMinutes(expiredInMinute));
+            RedisValue redisValue = new(valueStr);
+            return await _database.StringSetAsync(redisKey, redisValue, TimeSpan.FromMinutes(expiredInMinute));
         }
 
         public async Task<TimeSpan> PingAsync()

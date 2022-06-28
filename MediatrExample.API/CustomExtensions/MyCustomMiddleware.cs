@@ -8,7 +8,19 @@ namespace MediatrExample.API.CustomExtensions
         /// CorrelationId Middleware + CustomeExceptionMiddleware + RequestResponseMiddleware
         /// </summary>
         /// <param name="app"></param>
-        /// <returns></returns>
+        /// <returns>
+        /// <list type="number">
+        /// <item>
+        ///     CorrelationId Middleware for Add Request&Response Track Identifier
+        /// </item>
+        /// <item>
+        ///     CustomExceptionHandler Middleware for Prepare Exception Response
+        /// </item>
+        /// <item>
+        ///     UnAuthorizedResponseMiddleware Middleware for Add Prepare UnAuthorize Response
+        /// </item>
+        /// </list>
+        /// </returns>
         public static IApplicationBuilder UseMyCustomMiddleware(this WebApplication app)
         {
             app.UseMiddleware<CorrelationIdMiddleware>();

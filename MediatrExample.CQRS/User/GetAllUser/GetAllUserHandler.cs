@@ -4,6 +4,7 @@ using MediatrExample.Core.Interfaces.Data;
 using MediatrExample.Core.Interfaces.Service;
 using MediatrExample.Core.Interfaces.Service.CacheService;
 using MediatrExample.Service.Utilities;
+using MediatrExample.Shared.Constants;
 using MediatrExample.Shared.CustomMethod;
 using MediatrExample.Shared.DataModels;
 using MediatrExample.Shared.DataModels.User.GetAllUser;
@@ -32,7 +33,7 @@ namespace MediatrExample.CQRS.User.GetAllUser
             {
                 var response = new GetAllUserResponse();
 
-                string cacheKey = CacheKeyUtility.GetUserCacheKey(Shared.Enums.CacheEnums.UserCacheType.List);
+                string cacheKey = CacheKeyUtility.GetCacheKey(CacheKeys.GetUserListKey);
 
                 var cacheUserList= await _redisCacheService.GetAsync<IEnumerable<UserDataModel>>(cacheKey);
 

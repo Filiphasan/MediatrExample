@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -190,6 +191,22 @@ namespace MediatrExample.Shared.CustomMethod
                 ms.Seek(0, SeekOrigin.Begin);
                 return (T)serializer.Deserialize(ms);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="enumValue"></param>
+        /// <returns></returns>
+        public static string GetEnumDescription<TEnum>(this TEnum enumValue) where TEnum : struct
+        {
+            FieldInfo fi = enumValue.GetType().GetField(enumValue.ToString());
+
+            DescriptionAttribute[] attributes = (DescriptionAttribute[])fi.GetCustomAttributes(typeof(DescriptionAttribute), false);
+
+            if (attributes != null && attributes.Length > 0) return attributes[0].Description;
+            else return enumValue.ToString();
         }
     }
 }

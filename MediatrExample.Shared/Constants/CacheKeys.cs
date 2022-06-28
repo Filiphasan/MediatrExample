@@ -1,6 +1,6 @@
 ﻿namespace MediatrExample.Shared.Constants
 {
-    public class CacheKeys
+    public static class CacheKeys
     {
         #region User Cache Keys
         

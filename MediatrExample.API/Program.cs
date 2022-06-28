@@ -59,7 +59,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
 
 builder.Services.AddMediatR(Assembly.GetAssembly(typeof(GetAllUserRequest)));
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddMyServiceLifeCycles();
+builder.Services.AddMyServiceLifeCycles(Configuration);
 builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(GetAllUserRequestValidator)));
 builder.Services.ConfigureMyOptionModels(Configuration);
 

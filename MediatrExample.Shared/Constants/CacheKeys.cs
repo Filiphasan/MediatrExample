@@ -4,8 +4,8 @@
     {
         #region User Cache Keys
         
-        public const string GetUserKey = "user-{0}";
-        public const string GetUserListKey = "user-list";
+        public const string GetUserKey = "user__{0}";
+        public const string GetUserListKey = "user__list";
         
         #endregion
     }

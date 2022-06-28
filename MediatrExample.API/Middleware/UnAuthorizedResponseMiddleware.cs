@@ -22,11 +22,7 @@ namespace MediatrExample.API.Middleware
             if (context.Response.StatusCode == (int)HttpStatusCode.Unauthorized)
             {
                 context.Response.ContentType = "application/json";
-                await context.Response.WriteAsync(JsonSerializer.Serialize(new GenericResponse<string>
-                {
-                    HttpCode = 401,
-                    Message = "Unauthorized"
-                }));
+                await context.Response.WriteAsync(JsonSerializer.Serialize(GenericResponse<NoData>.Error(HttpStatusCode.Unauthorized.GetHashCode(), "UnAuthorized")));
             }
         }
     }

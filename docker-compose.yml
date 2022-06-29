@@ -3,6 +3,8 @@ version: '3.4'
 networks:
     mediatrexample:
         driver: bridge
+    elk_stack:
+        driver: bridge
 
 services:
     pgsql_image:
@@ -30,6 +32,36 @@ services:
         command: [ "redis-server" ]
         networks:
             - mediatrexample
+
+    elastic_image:
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+        container_name: elk_elastic
+        environment:
+            - XPACK_SECURITY_ENABLED=true
+            - discovery.type=single-node
+            - ELASTIC_PASSWORD=DkIedPPSCb
+            - ES_JAVA_OPTS=-Xms512m -Xmx512m
+        networks:
+            - elk_stack
+        ports:
+            - 9200:9200 
+
+    kibana_image:
+        container_name: elk_kibana
+        image: docker.elastic.co/kibana/kibana:7.5.2
+        environment:
+            - ELASTICSEARCH_URL=http://elastic_image:9200
+            - ELASTICSEARCH_HOSTS=http://elastic_image:9200
+            - ELASTICSEARCH_USERNAME=elastic
+            - ELASTICSEARCH_PASSWORD=DkIedPPSCb
+        networks:
+            - elk_stack
+        depends_on:
+            - elastic_image
+        links:
+            - elastic_image   
+        ports:
+            - 5601:5601
 
     mediatrexample.api:
         image: ${DOCKER_REGISTRY-}mediatrexampleapi

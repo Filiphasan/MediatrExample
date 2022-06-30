@@ -44,7 +44,8 @@ services:
         networks:
             - elk_stack
         ports:
-            - 9200:9200 
+            - 9200:9200
+            - 9300:9300
 
     kibana_image:
         container_name: elk_kibana
@@ -69,6 +70,8 @@ services:
         depends_on:
             - pgsql_image
             - redis_image
+            - elastic_image
+            - kibana_image
         build:
             context: .
             dockerfile: MediatrExample.API/Dockerfile
@@ -77,8 +80,10 @@ services:
         links:
             - pgsql_image
             - redis_image
+            - elastic_image
         environment:
             - CONNECTIONSTRINGS__NpgSQLConnection=User ID=postgres;Password=123456;Host=pgsql_image;Port=5432;Database=ecommerce
             - Redis__Host=redis_image
             - Redis__Port=6379
             - Redis__Password=RRnFPZ93tjBHB9W62p
+            - Serilog__WriteTo__Args__nodeUris=http://elastic:DkIedPPSCb@elastic_image:9200

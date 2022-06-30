@@ -28,7 +28,8 @@ namespace MediatrExample.Service.CacheServices
 
         public async Task<bool> RemoveAsync(string key)
         {
-            throw new NotImplementedException();
+            RedisKey redisKey = new(key);
+            return await _database.KeyDeleteAsync(redisKey);
         }
 
         public async Task<bool> SetAsync<T>(string key, T value, int expiredInMinute = 120)

@@ -28,6 +28,9 @@ namespace MediatrExample.CQRS.User.GetAllUser
 
         public async Task<GenericResponse<GetAllUserResponse>> Handle(GetAllUserRequest request, CancellationToken cancellationToken)
         {
+            _logHelper.LogInfo("--------------------------------------------------------------------------------------------------------------------------------------------------");
+            _logHelper.LogInfo("Log Example");
+            _logHelper.LogInfo("--------------------------------------------------------------------------------------------------------------------------------------------------");
             await CheckValidate(request);
             try
             {

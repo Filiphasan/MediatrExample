@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration.Json;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using StackExchange.Redis;
@@ -17,17 +16,11 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
-var _configuration = new ConfigurationBuilder()
-        .SetBasePath(Directory.GetCurrentDirectory())
-        .AddJsonFile("appsettings.json")
-        .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
-        .Build();
 // Add services to the container.
 
 builder.Logging.ClearProviders();
 builder.Host.UseSerilog((context, config) => config
-                        .WriteTo.Console()
-                        .ReadFrom.Configuration(_configuration));
+                        .ReadFrom.Configuration(Configuration));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
@@ -36,11 +29,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWTTokenOptions:SecretKey"])),
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero, //Skew default 300s
+            ClockSkew = TimeSpan.FromMinutes(1), //Skew default 5 minute
             ValidateAudience = false,
             ValidateIssuer = false,
             ValidateIssuerSigningKey = true
         };
+        #region JWT Error Handler for Auth
         //opt.Events = new JwtBearerEvents
         //{
         //    OnChallenge = async (context) =>
@@ -61,6 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         //        }
         //    }
         //};
+        #endregion
     });
 
 builder.Services.AddControllers();
@@ -122,7 +117,7 @@ builder.Services.AddSwaggerGen(opt =>
             new OpenApiSecurityScheme
             {
                 Name = "Bearer",
-                Type = SecuritySchemeType.ApiKey,
+                Type = SecuritySchemeType.OAuth2,
                 Scheme = "Bearer",
                 In = ParameterLocation.Header,
                 Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\""
@@ -147,6 +142,8 @@ if (Configuration["Environment:EnvironmentName"] == "dev")
 
 app.UseMyCustomMiddleware();
 
+app.UseSerilogRequestLogging();
+
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseHttpsRedirection();
@@ -158,7 +155,11 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/", () => "Server is running...");
+app.MapGet("/", () =>
+{
+    Log.Information("Example Log");
+    return "Server is Running...";
+});
 
 #region Auto Run Pending Migration
 using (var scope = app.Services.CreateAsyncScope())

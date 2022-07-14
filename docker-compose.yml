@@ -51,6 +51,7 @@ services:
             - elk_stack
         ports:
             - 9200:9200
+            - 9300:9300
 
     kibana_image:
         image: docker.elastic.co/kibana/kibana:7.5.2

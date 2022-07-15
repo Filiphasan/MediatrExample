@@ -103,7 +103,7 @@ namespace MediatrExample.Service.HelpServices
                 else
                 {
                     var value = property.GetValue(obj);
-                    property.SetValue(newObj, SetMaskSensitiveProp(value));
+                    property.SetValue(newObj, SetMaskSensitiveProp2(value));
                 }
             }
             return newObj;

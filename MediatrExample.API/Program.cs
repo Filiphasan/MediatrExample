@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using MediatrExample.API.CustomExtensions;
+using MediatrExample.API.Logging;
 using MediatrExample.CQRS.User.GetAllUser;
 using MediatrExample.Data.Context;
 using MediatrExample.Service.Utilities;
@@ -18,9 +19,10 @@ var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
 // Add services to the container.
 
-builder.Logging.ClearProviders();
-builder.Host.UseSerilog((context, config) => config
-                        .ReadFrom.Configuration(Configuration));
+var basicHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes("elastic:DkIedPPSCb"));
+
+MyLogger.ConfigureSeriLog(Configuration);
+builder.Host.UseSerilog();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>
@@ -142,8 +144,6 @@ if (Configuration["Environment:EnvironmentName"] == "dev")
 
 app.UseMyCustomMiddleware();
 
-app.UseSerilogRequestLogging();
-
 app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.UseHttpsRedirection();
@@ -157,7 +157,12 @@ app.MapControllers();
 
 app.MapGet("/", () =>
 {
-    Log.Information("Example Log");
+    using (var scope = app.Services.CreateAsyncScope())
+    {
+        var service = scope.ServiceProvider;
+        var logger = service.GetRequiredService<ILogger<Program>>();
+        logger.LogInformation("Example Log Date: {0}", DateTime.Now);
+    }
     return "Server is Running...";
 });
 

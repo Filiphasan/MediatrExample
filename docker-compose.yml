@@ -34,10 +34,12 @@ services:
             - mediatrexample
 
     elastic_image:
-        image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+        image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
         container_name: elk_elastic
         environment:
             - node.name=elastic01
+            - xpack.monitoring.enabled=true
+            - xpack.watcher.enabled=false
             - xpack.security.enabled=true
             - xpack.security.audit.enabled=true
             - discovery.type=single-node
@@ -54,7 +56,7 @@ services:
             - 9300:9300
 
     kibana_image:
-        image: docker.elastic.co/kibana/kibana:7.5.2
+        image: docker.elastic.co/kibana/kibana:7.16.1
         container_name: elk_kibana
         environment:
             - ELASTICSEARCH_URL=http://elastic_image:9200
@@ -66,7 +68,7 @@ services:
         depends_on:
             - elastic_image
         links:
-            - elastic_image  
+            - elastic_image
         ports:
             - 5601:5601
 
@@ -94,4 +96,4 @@ services:
             - Redis__Host=redis_image
             - Redis__Port=6379
             - Redis__Password=RRnFPZ93tjBHB9W62p
-            - Serilog__WriteTo__1__Args__nodeUris=http://elastic:DkIedPPSCb@elastic_image:9200
+            #- Serilog__WriteTo__1__Args__nodeUris=http://elastic:DkIedPPSCb@elastic_image:9200

@@ -13,16 +13,21 @@ namespace MediatrExample.API.Controllers
     public class UserController : CustomBaseController
     {
         private readonly IMediator _mediator;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IMediator mediator)
+        public UserController(IMediator mediator, ILogger<UserController> logger)
         {
             _mediator = mediator;
+            _logger = logger;
         }
-        
+
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(GenericResponse<GetAllUserResponse>), 200)]
         public async Task<IActionResult> GetUserList([FromQuery] GetAllUserRequest request)
         {
+            _logger.LogInformation("DENEME INFO --------------");
+            _logger.LogError("DENEME HATA ------------");
             return CreateResultInstance(await _mediator.Send(request));
         }
 

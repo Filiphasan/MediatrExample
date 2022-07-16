@@ -16,7 +16,7 @@ namespace MediatrExample.API.Logging
             string elasticUrl = configuration["SeriLogConfig:ElasticUri"];
 
             Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
+                .MinimumLevel.Information()
                 .WriteTo.Console()
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUrl))
                 {

@@ -25,44 +25,67 @@ namespace MediatrExample.Service.HelpServices
         public void LogError(Exception exception)
         {
             string correlationId = GetCorrelationId();
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"CorrelationId: {correlationId}");
-            stringBuilder.AppendLine($"Message: {exception.Message}");
-            stringBuilder.AppendLine($"Exception: {exception.ExpectExceptionMessage()}");
+            StringBuilder stringBuilder = new StringBuilder(); 
+            var formField = new List<string>();
 
-            _logger.LogError(stringBuilder.ToString());
+            stringBuilder.AppendLine("{CorrelationId}");
+            stringBuilder.AppendLine("{Message}");
+            stringBuilder.AppendLine("{Exception}");
+
+            formField.Add(correlationId);
+            formField.Add(exception.Message);
+            formField.Add(exception.ExpectExceptionMessage());
+
+            _logger.LogError(stringBuilder.ToString(), formField.ToArray());
         }
 
         public void LogError(string message, Exception exception)
         {
             string correlationId = GetCorrelationId();
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"CorrelationId: {correlationId}");
-            stringBuilder.AppendLine($"Message: {message} - {exception.Message}");
-            stringBuilder.AppendLine($"Exception: {exception.ExpectExceptionMessage()}");
+            var formField = new List<string>();
 
-            _logger.LogError(stringBuilder.ToString());
+            stringBuilder.AppendLine("{CorrelationId}");
+            stringBuilder.AppendLine("{Message}");
+            stringBuilder.AppendLine("{Exception}");
+
+            formField.Add(correlationId);
+            formField.Add($"{message} - {exception.Message}");
+            formField.Add(exception.ExpectExceptionMessage());
+
+            _logger.LogError(stringBuilder.ToString(), formField.ToArray());
         }
 
         public void LogInfo(string message)
         {
             string correlationId = GetCorrelationId();
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"CorrelationId: {correlationId}");
-            stringBuilder.AppendLine($"Message: {message}");
+            var formField = new List<string>();
 
-            _logger.LogInformation(stringBuilder.ToString());
+            stringBuilder.AppendLine("{CorrelationId}");
+            stringBuilder.AppendLine("{Message}");
+
+            formField.Add(correlationId);
+            formField.Add(message);
+
+            _logger.LogInformation(stringBuilder.ToString(), formField.ToArray());
         }
 
         public void LogInfo<TObj>(string message, TObj obje) where TObj : class, new()
         {
             string correlationId = GetCorrelationId();
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.AppendLine($"CorrelationId: {correlationId}");
-            stringBuilder.AppendLine($"Message: {message}");
-            stringBuilder.AppendLine($"Object: {JsonSerializer.Serialize(SetMaskSensitiveProp2(obje))}");
+            var formField = new List<string>();
 
-            _logger.LogInformation(stringBuilder.ToString());
+            stringBuilder.AppendLine("{CorrelationId}");
+            stringBuilder.AppendLine("{Message}");
+            stringBuilder.AppendLine("{Object}");
+
+            formField.Add(correlationId);
+            formField.Add(message);
+            formField.Add(JsonSerializer.Serialize(SetMaskSensitiveProp2(obje)));
+
+            _logger.LogInformation(stringBuilder.ToString(), formField.ToArray());
         }
 
         private TObj SetMaskSensitiveProp<TObj>(TObj obj) where TObj : class, new()

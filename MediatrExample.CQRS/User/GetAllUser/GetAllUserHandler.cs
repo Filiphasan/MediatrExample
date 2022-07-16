@@ -28,9 +28,6 @@ namespace MediatrExample.CQRS.User.GetAllUser
 
         public async Task<GenericResponse<GetAllUserResponse>> Handle(GetAllUserRequest request, CancellationToken cancellationToken)
         {
-            _logHelper.LogInfo("--------------------------------------------------------------------------------------------------------------------------------------------------");
-            _logHelper.LogInfo("Log Example");
-            _logHelper.LogInfo("--------------------------------------------------------------------------------------------------------------------------------------------------");
             await CheckValidate(request);
             try
             {
@@ -44,24 +41,27 @@ namespace MediatrExample.CQRS.User.GetAllUser
                 {
                     response.UserList = cacheUserList;
                     response.TotalCount = cacheUserList.Count();
-                    return GenericResponse<GetAllUserResponse>.Success(200, response);
+                }
+                else
+                {
+                    var query = _userRepository.GetUserList(request.Query);
+
+                    var data = await query.Select(x => new UserDataModel
+                    {
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        Gsm = x.Gsm,
+                        Id = x.Id,
+                        Mail = x.Mail,
+                    }).TryPagination(request.PageCount, request.PageNumber).ToListWithNoLockAsync();
+
+                    await _redisCacheService.SetAsync(cacheKey, data);
+
+                    response.TotalCount = await query.CountAsync();
+                    response.UserList = data;
                 }
 
-                var query = _userRepository.GetUserList(request.Query);
-
-                var data = await query.Select(x => new UserDataModel
-                {
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    Gsm = x.Gsm,
-                    Id = x.Id,
-                    Mail = x.Mail,
-                }).TryPagination(request.PageCount, request.PageNumber).ToListWithNoLockAsync();
-
-                await _redisCacheService.SetAsync(cacheKey, data);
-
-                response.TotalCount = await query.CountAsync();
-                response.UserList = data;
+                _logHelper.LogInfo("Hasan Example Log --");
 
                 return GenericResponse<GetAllUserResponse>.Success(200, response);
             }

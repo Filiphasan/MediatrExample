@@ -19,10 +19,12 @@ var builder = WebApplication.CreateBuilder(args);
 var Configuration = builder.Configuration;
 // Add services to the container.
 
-var basicHeader = Convert.ToBase64String(Encoding.UTF8.GetBytes("elastic:DkIedPPSCb"));
+// First Way Serilog ELK Configure With Code
+//MyLogger.ConfigureSeriLog(Configuration);
+//builder.Host.UseSerilog();
 
-MyLogger.ConfigureSeriLog(Configuration);
-builder.Host.UseSerilog();
+// Second Way Serilog ELK Configure With appsetting.json, i think this is useful other way
+builder.Host.UseSerilog(new LoggerConfiguration().ReadFrom.Configuration(Configuration).CreateLogger());
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, opt =>

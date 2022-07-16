@@ -3,8 +3,6 @@ version: '3.4'
 networks:
     mediatrexample:
         driver: bridge
-    elk_stack:
-        driver: bridge
 
 services:
     pgsql_image:
@@ -37,7 +35,6 @@ services:
         image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
         container_name: elk_elastic
         environment:
-            - node.name=elastic01
             - xpack.monitoring.enabled=true
             - xpack.watcher.enabled=false
             - xpack.security.enabled=true
@@ -45,12 +42,19 @@ services:
             - discovery.type=single-node
             - ELASTIC_PASSWORD=DkIedPPSCb
             - ES_JAVA_OPTS=-Xms512m -Xmx512m
+            - node.master=true
+            - node.data=true
+            - http.cors.enabled=true
+            - http.cors.allow-origin=*
+            - http.cors.allow-headers=Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With
+            - http.cors.allow-credentials=true
         ulimits:
             memlock:
                 soft: -1
                 hard: -1
+        mem_limit: 1g
         networks:
-            - elk_stack
+            - mediatrexample
         ports:
             - 9200:9200
             - 9300:9300
@@ -59,18 +63,38 @@ services:
         image: docker.elastic.co/kibana/kibana:7.16.1
         container_name: elk_kibana
         environment:
-            - ELASTICSEARCH_URL=http://elastic_image:9200
-            - ELASTICSEARCH_HOSTS=http://elastic_image:9200
-            - ELASTICSEARCH_USERNAME=elastic
-            - ELASTICSEARCH_PASSWORD=DkIedPPSCb
+            - "ELASTICSEARCH_URL=http://elastic_image:9200"
+            - "ELASTICSEARCH_HOSTS=http://elastic_image:9200"
+            - "ELASTICSEARCH_USERNAME=elastic"
+            - "ELASTICSEARCH_PASSWORD=DkIedPPSCb"
+            - server.name=kibana_image
+            - server.host="0"
+            - xpack.security.enabled=true
+            - xpack.monitoring.enabled=true
+            - xpack.ml.enabled=false
+            - xpack.graph.enabled=false
+            - xpack.reporting.enabled=false
+            - xpack.grokdebugger.enabled=false
         networks:
-            - elk_stack
+            - mediatrexample
         depends_on:
             - elastic_image
         links:
             - elastic_image
         ports:
             - 5601:5601
+
+    head:
+        image: mobz/elasticsearch-head:5
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+        mem_limit: 1g
+        ports:
+            - "9100:9100"
+        networks:
+            - mediatrexample
 
     mediatrexample.api:
         image: ${DOCKER_REGISTRY-}mediatrexampleapi
@@ -96,4 +120,5 @@ services:
             - Redis__Host=redis_image
             - Redis__Port=6379
             - Redis__Password=RRnFPZ93tjBHB9W62p
-            #- Serilog__WriteTo__1__Args__nodeUris=http://elastic:DkIedPPSCb@elastic_image:9200
+            - Serilog__WriteTo__1__Args__nodeUris=http://elastic:DkIedPPSCb@elastic_image:9200
+            - SeriLogConfig__ElasticUri=http://elastic:DkIedPPSCb@elastic_image:9200

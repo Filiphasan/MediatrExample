@@ -11,27 +11,31 @@ namespace MediatrExample.API.Logging
         {
             string elasticUser = configuration["SeriLogConfig:ElasticUser"];
             string elasticPassword = configuration["SeriLogConfig:ElasticPassword"];
+            string environment = configuration["SeriLogConfig:Environment"];
+            string projectName = configuration["SeriLogConfig:ProjectName"];
+            string elasticUrl = configuration["SeriLogConfig:ElasticUri"];
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Debug()
-                .Enrich.FromLogContext()
-                .Enrich.WithMachineName()
-                .WriteTo.Debug()
                 .WriteTo.Console()
-                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["SeriLogConfig:ElasticUri"]))
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elasticUrl))
                 {
                     AutoRegisterTemplate = true,
+                    OverwriteTemplate = true,
+                    DetectElasticsearchVersion = true,
                     AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
-                    IndexFormat = $"{configuration["SeriLogConfig:ProjectName"]}-{configuration["SeriLogConfig:Environment"]}-logs-{0:yyyy.MM.dd}",
-                    ModifyConnectionSettings = s => s.BasicAuthentication(elasticUser, elasticPassword),
-                    FailureCallback = e => { Console.WriteLine("Hasan - Unable to submit event -- " + e.MessageTemplate); e.Properties.Values.ToList().ForEach(x => Console.Write(x)); },
+                    IndexFormat = $"{projectName}-{environment}-logs-" + "{0:yyyy.MM.dd}",
+                    //ModifyConnectionSettings = s => s.BasicAuthentication(elasticUser, elasticPassword),
+                    FailureCallback = e => { Console.WriteLine("Hasan - Unable to submit event -- " + e.MessageTemplate); },
                     EmitEventFailure = EmitEventFailureHandling.WriteToSelfLog |
                                    EmitEventFailureHandling.WriteToFailureSink |
                                    EmitEventFailureHandling.RaiseCallback |
                                    EmitEventFailureHandling.ThrowException,
                     FailureSink = new FileSink("./failures.txt", new JsonFormatter(), null)
                 })
-                .Enrich.WithProperty("Environment", configuration["SeriLogConfig:Environment"])
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithProperty("Environment", environment)
                 .ReadFrom.Configuration(configuration, "SerilogLogLevels")
                 .CreateLogger();
         }

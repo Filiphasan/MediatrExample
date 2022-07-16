@@ -31,7 +31,7 @@ namespace MediatrExample.API.Logging
                                    EmitEventFailureHandling.WriteToFailureSink |
                                    EmitEventFailureHandling.RaiseCallback |
                                    EmitEventFailureHandling.ThrowException,
-                    FailureSink = new FileSink("./failures.txt", new JsonFormatter(), null)
+                    //FailureSink = new FileSink("./failures.txt", new JsonFormatter(), null)
                 })
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()
